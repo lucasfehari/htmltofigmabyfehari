@@ -74,26 +74,54 @@ async function convertToFigmaNode(jsonNode: any, parentNode: any = null): Promis
 
     if (jsonNode.fontStyle === 'italic') style += ' Italic';
 
-    const loadedFont = await ensureFontLoaded(family, style);
+    let loadedFont = { family: 'Inter', style: 'Regular' };
+    try {
+        loadedFont = await ensureFontLoaded(family, style);
+    } catch(e) {}
     
     const text = figma.createText();
-    text.fontName = loadedFont;
-    text.characters = jsonNode.text || " ";
-    text.fontSize = Math.max(1, jsonNode.fontSize || 16);
+    try {
+        text.fontName = loadedFont;
+    } catch(e) {
+        text.fontName = { family: 'Inter', style: 'Regular' };
+    }
+    
+    try {
+        text.characters = jsonNode.text || " ";
+    } catch(e) {
+        // Fallback for unsupported characters (like emojis in non-emoji fonts)
+        try {
+            await figma.loadFontAsync({ family: 'Inter', style: 'Regular' });
+            text.fontName = { family: 'Inter', style: 'Regular' };
+            text.characters = jsonNode.text || " ";
+        } catch(e2) {
+            text.characters = "";
+        }
+    }
+    
+    try {
+        text.fontSize = Math.max(1, jsonNode.fontSize || 16);
+    } catch(e) {}
     
     const color = jsonNode.color || { r: 0, g: 0, b: 0, a: 1 };
     text.fills = [{ type: 'SOLID', color: { r: color.r, g: color.g, b: color.b }, opacity: color.a !== undefined ? color.a : 1 }];
     
-    if (jsonNode.lineHeight) {
-      text.lineHeight = { value: parseFloat(jsonNode.lineHeight), unit: 'PIXELS' };
+    if (jsonNode.lineHeight && !isNaN(parseFloat(jsonNode.lineHeight))) {
+      try {
+          text.lineHeight = { value: Math.max(1, parseFloat(jsonNode.lineHeight)), unit: 'PIXELS' };
+      } catch(e) {}
     }
     
     const aligns: any = { 'left': 'MIN', 'center': 'CENTER', 'right': 'MAX', 'justify': 'JUSTIFIED' };
     text.textAlignHorizontal = aligns[jsonNode.textAlign] || 'MIN';
     
     if (jsonNode.isMultiline && jsonNode.width > 0) {
-        text.textAutoResize = 'HEIGHT';
-        text.resize(Math.max(1, jsonNode.width + 5), text.height);
+        try {
+            text.resize(Math.max(1, jsonNode.width), Math.max(1, text.height || 10));
+            text.textAutoResize = 'HEIGHT';
+        } catch(e) {
+            text.textAutoResize = 'WIDTH_AND_HEIGHT';
+        }
     } else {
         text.textAutoResize = 'WIDTH_AND_HEIGHT';
     }
@@ -153,10 +181,10 @@ async function convertToFigmaNode(jsonNode: any, parentNode: any = null): Promis
     }
     
     // Border Radius
-    frame.topLeftRadius = Math.max(0, jsonNode.topLeftRadius || 0);
-    frame.topRightRadius = Math.max(0, jsonNode.topRightRadius || 0);
-    frame.bottomLeftRadius = Math.max(0, jsonNode.bottomLeftRadius || 0);
-    frame.bottomRightRadius = Math.max(0, jsonNode.bottomRightRadius || 0);
+    frame.topLeftRadius = Math.max(0, jsonNode.radiusTL || 0);
+    frame.topRightRadius = Math.max(0, jsonNode.radiusTR || 0);
+    frame.bottomLeftRadius = Math.max(0, jsonNode.radiusBL || 0);
+    frame.bottomRightRadius = Math.max(0, jsonNode.radiusBR || 0);
     
     // Border
     // Borders (Individual)
