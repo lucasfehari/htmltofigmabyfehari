@@ -5,14 +5,23 @@
 
 figma.showUI(__html__, { width: 400, height: 660, themeColors: true });
 
-// Load a fallback font immediately
+const loadedFonts = new Set<string>();
+
 async function ensureFontLoaded(family: string, style: string) {
+  const key = `${family}::${style}`;
+  if (loadedFonts.has(key)) return { family, style };
+
   try {
     await figma.loadFontAsync({ family, style });
+    loadedFonts.add(key);
     return { family, style };
   } catch (e) {
     // fallback
-    await figma.loadFontAsync({ family: 'Inter', style: 'Regular' });
+    const fallbackKey = 'Inter::Regular';
+    if (!loadedFonts.has(fallbackKey)) {
+        await figma.loadFontAsync({ family: 'Inter', style: 'Regular' });
+        loadedFonts.add(fallbackKey);
+    }
     return { family: 'Inter', style: 'Regular' };
   }
 }
@@ -35,26 +44,62 @@ async function convertToFigmaNode(jsonNode: any, parentNode: any = null): Promis
   }
 
   if (jsonNode.type === 'TEXT') {
-    // Fallbacks for fonts
-    let family = jsonNode.fontFamily || 'Inter';
-    if (family.includes('system-ui') || family.includes('sans-serif')) family = 'Inter';
-    let style = jsonNode.fontStyle || 'Regular';
-    
+    if (!jsonNode.text || !jsonNode.text.trim()) return null;
+
+    let family = (jsonNode.fontFamily || 'Inter').split(',')[0].replace(/['"]/g, '').trim();
+    if (!family || family.toLowerCase().includes('system') || family.toLowerCase().includes('sans-serif') || family.toLowerCase().includes('serif') || family.toLowerCase().includes('monospace')) {
+        family = 'Inter';
+    }
+
+    let w = jsonNode.fontWeight;
+    if (typeof w === 'string') {
+        w = w.toLowerCase();
+        if (w === 'bold') w = 700;
+        else if (w === 'normal') w = 400;
+        else w = parseInt(w) || 400;
+    } else {
+        w = w || 400;
+    }
+
+    let style = 'Regular';
+    if (w <= 100) style = 'Thin';
+    else if (w <= 200) style = 'ExtraLight';
+    else if (w <= 300) style = 'Light';
+    else if (w <= 400) style = 'Regular';
+    else if (w <= 500) style = 'Medium';
+    else if (w <= 600) style = 'SemiBold';
+    else if (w <= 700) style = 'Bold';
+    else if (w <= 800) style = 'ExtraBold';
+    else style = 'Black';
+
+    if (jsonNode.fontStyle === 'italic') style += ' Italic';
+
     const loadedFont = await ensureFontLoaded(family, style);
     
     const text = figma.createText();
     text.fontName = loadedFont;
     text.characters = jsonNode.text || " ";
     text.fontSize = Math.max(1, jsonNode.fontSize || 16);
-    text.fills = [{ type: 'SOLID', color: { r: jsonNode.color.r, g: jsonNode.color.g, b: jsonNode.color.b }, opacity: jsonNode.color.a }];
+    
+    const color = jsonNode.color || { r: 0, g: 0, b: 0, a: 1 };
+    text.fills = [{ type: 'SOLID', color: { r: color.r, g: color.g, b: color.b }, opacity: color.a !== undefined ? color.a : 1 }];
     
     if (jsonNode.lineHeight) {
-      text.lineHeight = { value: jsonNode.lineHeight, unit: 'PIXELS' };
+      text.lineHeight = { value: parseFloat(jsonNode.lineHeight), unit: 'PIXELS' };
     }
     
     const aligns: any = { 'left': 'MIN', 'center': 'CENTER', 'right': 'MAX', 'justify': 'JUSTIFIED' };
     text.textAlignHorizontal = aligns[jsonNode.textAlign] || 'MIN';
-    text.textAutoResize = 'WIDTH_AND_HEIGHT';
+    
+    if (jsonNode.isMultiline && jsonNode.width > 0) {
+        text.textAutoResize = 'HEIGHT';
+        text.resize(Math.max(1, jsonNode.width + 5), text.height);
+    } else {
+        text.textAutoResize = 'WIDTH_AND_HEIGHT';
+    }
+    
+    if (jsonNode.textDecoration === 'underline') text.textDecoration = 'UNDERLINE';
+    if (jsonNode.textDecoration === 'line-through') text.textDecoration = 'STRIKETHROUGH';
     
     return text;
   }
@@ -72,10 +117,37 @@ async function convertToFigmaNode(jsonNode: any, parentNode: any = null): Promis
       } catch (e) {
         frame.fills = [];
       }
-    } else if (jsonNode.bgColors && jsonNode.bgColors.length > 0) {
-      frame.fills = jsonNode.bgColors.map((c: any) => ({
-        type: 'SOLID', color: { r: c.r, g: c.g, b: c.b }, opacity: c.a
-      }));
+    } else if (jsonNode.parsedGradient) {
+      try {
+        const g = jsonNode.parsedGradient;
+        const gradientStops = g.stops.map((s: any) => ({
+          position: Math.min(1, Math.max(0, s.position)),
+          color: { r: s.color.r, g: s.color.g, b: s.color.b, a: s.color.a }
+        }));
+        
+        let transform = [[1, 0, 0], [0, 1, 0]];
+        if (g.type === 'GRADIENT_LINEAR') {
+           const rad = ((g.angle || 180) - 90) * (Math.PI / 180);
+           const cos = Math.cos(rad);
+           const sin = Math.sin(rad);
+           transform = [
+              [cos, sin, (1 - cos - sin) / 2],
+              [-sin, cos, (1 + sin - cos) / 2]
+           ];
+        }
+        
+        frame.fills = [{
+          type: g.type,
+          gradientStops,
+          gradientTransform: transform as any
+        }];
+      } catch(e) {
+        frame.fills = [];
+      }
+    } else if (jsonNode.bgColor) {
+      frame.fills = [{
+        type: 'SOLID', color: { r: jsonNode.bgColor.r, g: jsonNode.bgColor.g, b: jsonNode.bgColor.b }, opacity: jsonNode.bgColor.a
+      }];
     } else {
       frame.fills = [];
     }
@@ -87,71 +159,83 @@ async function convertToFigmaNode(jsonNode: any, parentNode: any = null): Promis
     frame.bottomRightRadius = Math.max(0, jsonNode.bottomRightRadius || 0);
     
     // Border
-    if (jsonNode.borderWidth > 0 && jsonNode.borderColor) {
-      frame.strokes = [{ type: 'SOLID', color: { r: jsonNode.borderColor.r, g: jsonNode.borderColor.g, b: jsonNode.borderColor.b }, opacity: jsonNode.borderColor.a }];
-      frame.strokeWeight = Math.max(0.01, jsonNode.borderWidth);
+    // Borders (Individual)
+    const hasBorder = jsonNode.borderTop > 0 || jsonNode.borderBottom > 0 || jsonNode.borderLeft > 0 || jsonNode.borderRight > 0;
+    if (hasBorder && jsonNode.borderColor && jsonNode.borderColor.a > 0) {
+        frame.strokes = [{ 
+            type: 'SOLID', 
+            color: { r: jsonNode.borderColor.r, g: jsonNode.borderColor.g, b: jsonNode.borderColor.b },
+            opacity: jsonNode.borderColor.a
+        }];
+        if (jsonNode.borderTop === jsonNode.borderBottom && jsonNode.borderTop === jsonNode.borderLeft && jsonNode.borderTop === jsonNode.borderRight) {
+            frame.strokeWeight = jsonNode.borderTop;
+        } else {
+            try {
+                frame.strokeTopWeight = jsonNode.borderTop || 0;
+                frame.strokeBottomWeight = jsonNode.borderBottom || 0;
+                frame.strokeLeftWeight = jsonNode.borderLeft || 0;
+                frame.strokeRightWeight = jsonNode.borderRight || 0;
+            } catch(e) {
+                frame.strokeWeight = Math.max(jsonNode.borderTop, jsonNode.borderBottom, jsonNode.borderLeft, jsonNode.borderRight);
+            }
+        }
+        frame.strokeAlign = 'INSIDE';
     }
     
     frame.opacity = Math.max(0, Math.min(1, jsonNode.opacity !== undefined ? jsonNode.opacity : 1));
 
-    // Parse simple shadow
-    if (jsonNode.boxShadow && jsonNode.boxShadow !== 'none') {
-      const match = jsonNode.boxShadow.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)\s+(-?\d+)px\s+(-?\d+)px\s+(\d+)px/);
-      if (match) {
-        frame.effects = [{
-          type: 'DROP_SHADOW',
-          color: { r: parseInt(match[1])/255, g: parseInt(match[2])/255, b: parseInt(match[3])/255, a: match[4] ? parseFloat(match[4]) : 1 },
-          offset: { x: parseFloat(match[5]), y: parseFloat(match[6]) },
-          radius: parseFloat(match[7]),
-          spread: 0,
+    // Effects (Shadows and Blurs)
+    const combinedEffects: Effect[] = [];
+    
+    if (jsonNode.figmaShadows && jsonNode.figmaShadows.length > 0) {
+      jsonNode.figmaShadows.forEach((s: any) => {
+        combinedEffects.push({
+          type: s.inset ? 'INNER_SHADOW' : 'DROP_SHADOW',
+          color: s.color,
+          offset: { x: s.x, y: s.y },
+          radius: s.blur,
+          spread: s.spread,
           visible: true,
           blendMode: 'NORMAL'
-        }];
-      }
+        });
+      });
+    }
+    
+    if (jsonNode.figmaEffects && jsonNode.figmaEffects.length > 0) {
+       jsonNode.figmaEffects.forEach((ef: any) => {
+         combinedEffects.push({
+           type: ef.type,
+           radius: ef.radius,
+           visible: true,
+           blendMode: 'NORMAL'
+         } as any);
+       });
+    }
+    
+    if (combinedEffects.length > 0) {
+       frame.effects = combinedEffects;
     }
 
-    // Determine layout
-    const isFlex = jsonNode.display === 'flex' || jsonNode.display === 'inline-flex';
+    // Determine layout: ABSOLUTE PIXEL-PERFECT MODE
+    frame.layoutMode = 'NONE';
+    frame.clipsContent = jsonNode.overflow === 'hidden';
     
-    if (isFlex) {
-      frame.layoutMode = jsonNode.flexDirection === 'row' ? 'HORIZONTAL' : 'VERTICAL';
-      
-      const flexAlign: any = { 'flex-start': 'MIN', 'center': 'CENTER', 'flex-end': 'MAX', 'space-between': 'SPACE_BETWEEN' };
-      frame.primaryAxisAlignItems = flexAlign[jsonNode.justifyContent] || 'MIN';
-      frame.counterAxisAlignItems = flexAlign[jsonNode.alignItems] || 'MIN';
-      
-      frame.itemSpacing = Math.max(-1000, jsonNode.gap || 0); // Figma allows negative spacing up to a point
-      frame.paddingTop = Math.max(0, jsonNode.paddingTop || 0);
-      frame.paddingRight = Math.max(0, jsonNode.paddingRight || 0);
-      frame.paddingBottom = Math.max(0, jsonNode.paddingBottom || 0);
-      frame.paddingLeft = Math.max(0, jsonNode.paddingLeft || 0);
-      
-      frame.primaryAxisSizingMode = 'FIXED';
-      frame.counterAxisSizingMode = 'FIXED';
-      frame.resize(Math.max(0.01, jsonNode.width), Math.max(0.01, jsonNode.height));
+    if (jsonNode.rotation) {
+        frame.rotation = jsonNode.rotation;
     }
 
     // Append children
-    for (let child of jsonNode.children) {
+    const sortedChildren = [...(jsonNode.children || [])].sort((a, b) => (a.zIndex || 0) - (b.zIndex || 0));
+    for (let child of sortedChildren) {
       const childNode = await convertToFigmaNode(child, jsonNode);
       if (childNode) {
         frame.appendChild(childNode);
+        // Absolute Pixel-Perfect Positioning relative to parent
+        childNode.x = (child.x || 0) - (jsonNode.x || 0);
+        childNode.y = (child.y || 0) - (jsonNode.y || 0);
         
-        if (!isFlex) {
-           childNode.x = child.x - jsonNode.x;
-           childNode.y = child.y - jsonNode.y;
-        } else {
-           // For flex containers, try to absolute position children that have absolute position in CSS.
-           // Since we don't extract "position: absolute" explicitly, we will just rely on AutoLayout.
-           // However, if the result looks "bugged", it might be because of margin-based pushing or absolute items.
-           // We can check if child is severely out of bounds and force absolute position (Figma API supports layoutPositioning = 'ABSOLUTE')
-           if (child.position === 'absolute' || child.position === 'fixed') {
-             if ('layoutPositioning' in childNode) {
-                (childNode as any).layoutPositioning = 'ABSOLUTE';
-                childNode.x = child.x - jsonNode.x;
-                childNode.y = child.y - jsonNode.y;
-             }
-           }
+        if (child.rotation) {
+            (childNode as any).rotation = child.rotation;
         }
       }
     }
@@ -180,12 +264,20 @@ figma.ui.onmessage = async (msg) => {
 
     const createdNodes: SceneNode[] = [];
     
+    let currentIndex = 0;
     for (const rootJson of nodesJson) {
       const figmaNode = await convertToFigmaNode(rootJson);
       if (figmaNode) {
-        figma.currentPage.appendChild(figmaNode);
+        figmaNode.x = currentIndex * ((rootJson.width || 400) + 100);
+        figmaNode.y = 0;
         createdNodes.push(figmaNode);
+        currentIndex++;
       }
+    }
+    
+    // Append all nodes to the canvas at once to prevent them from appearing one-by-one (Loading effect)
+    for (const node of createdNodes) {
+        figma.currentPage.appendChild(node);
     }
 
     if (createdNodes.length > 0) {
