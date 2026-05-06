@@ -1116,6 +1116,23 @@
         }
       }
 
+      const fetchImageBase64 = (url, w, h) => new Promise((resolve) => {
+          const img = new Image();
+          img.crossOrigin = 'anonymous';
+          img.onload = () => {
+              try {
+                  const canvas = doc.createElement('canvas');
+                  canvas.width = w || img.width || 100;
+                  canvas.height = h || img.height || 100;
+                  const ctx = canvas.getContext('2d');
+                  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                  resolve(canvas.toDataURL('image/png').split(',')[1]);
+              } catch(e) { resolve(null); }
+          };
+          img.onerror = () => resolve(null);
+          img.src = url;
+      });
+
       if (cs.backgroundImage && cs.backgroundImage !== 'none') {
         if (cs.backgroundImage.includes('gradient')) {
           parsedGradient = parseGradient(cs.backgroundImage);
@@ -1123,6 +1140,10 @@
           const match = cs.backgroundImage.match(/url\(['"]?(.*?)['"]?\)/);
           if (match && match[1]) {
             imageUrl = match[1];
+            isImage = true;
+            if (!base64Data) {
+                base64Data = await fetchImageBase64(imageUrl, rect.width, rect.height);
+            }
           }
         }
       }
@@ -1262,7 +1283,9 @@
       // Simple pseudo-element extraction
       for (const pseudo of ['::before', '::after']) {
          const pcs = doc.defaultView.getComputedStyle(el, pseudo);
-         if (pcs && pcs.content && pcs.content !== 'none' && pcs.content !== 'normal') {
+         // Only extract pseudo elements that are absolute (like noise textures, overlays, floating icons)
+         // Inline pseudo elements (like arrows in buttons) cannot be correctly positioned with current engine without layoutMode
+         if (pcs && pcs.position === 'absolute' && pcs.content && pcs.content !== 'none' && pcs.content !== 'normal') {
              // Create a dummy node representing the pseudo element
              const contentStr = pcs.content.replace(/^["']|["']$/g, '');
              const pBgColor = parseColor(pcs.backgroundColor);
