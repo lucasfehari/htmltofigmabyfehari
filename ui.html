@@ -1648,8 +1648,26 @@
           // Para overflow:hidden, o Figma DEVE clipar o conteúdo
           section.overflow = secCs.overflow;
 
+          // effectiveZI: filhos com z-index:auto herdam o zIndex do pai posicionado + 0.5
+          // FORA do loop para evitar redeclaração / hoisting problemático
+          function effectiveZI(element, style) {
+            if (style.zIndex !== 'auto') return parseInt(style.zIndex) || 0;
+            let anc = element.parentElement;
+            let depth = 0;
+            while (anc && anc !== sectionEl && depth < 10) {
+              const ancCs = iDoc.defaultView.getComputedStyle(anc);
+              if (ancCs.zIndex !== 'auto') {
+                return (parseInt(ancCs.zIndex) || 0) + 0.5 + depth * 0.01;
+              }
+              anc = anc.parentElement;
+              depth++;
+            }
+            return 0;
+          }
+
           const SKIP = new Set(['SCRIPT','STYLE','LINK','META','NOSCRIPT','BR','HEAD']);
-          const covered = new Set(); // elementos cobertos por um TEXT_MIXED pai
+          const covered = new Set();
+          let domIndex = 0; // contador DOM para desempate no sort
 
           const allEls = sectionEl.querySelectorAll('*');
           for (const el of allEls) {
@@ -1662,22 +1680,6 @@
             const r   = el.getBoundingClientRect();
             if (r.width < 1 && r.height < 1) continue;
 
-            // effectiveZI: filhos com z-index:auto herdam o zIndex do pai posicionado + 0.5
-            // Isso garante que texto/conteúdo sempre aparece ACIMA do frame pai no sort final
-            function effectiveZI(element, style) {
-              if (style.zIndex !== 'auto') return parseInt(style.zIndex) || 0;
-              let anc = element.parentElement;
-              let depth = 0;
-              while (anc && anc !== sectionEl && depth < 10) {
-                const ancCs = iDoc.defaultView.getComputedStyle(anc);
-                if (ancCs.zIndex !== 'auto') {
-                  return (parseInt(ancCs.zIndex) || 0) + 0.5 + depth * 0.01;
-                }
-                anc = anc.parentElement;
-                depth++;
-              }
-              return 0;
-            }
             const zi = effectiveZI(el, cs);
             // Posição relativa à seção (verdade única: getBoundingClientRect)
             const rx = r.x - secRect.x;
@@ -1689,8 +1691,11 @@
                 const clone = el.cloneNode(true);
                 clone.setAttribute('width', r.width);
                 clone.setAttribute('height', r.height);
-                section.children.push({ type:'SVG', name:'svg', x:rx, y:ry,
-                  width:r.width, height:r.height, svgData:clone.outerHTML, zIndex:zi });
+                section.children.push({
+              type:'SVG', name:'svg', x:rx, y:ry,
+              width:r.width, height:r.height, svgData:clone.outerHTML,
+              zIndex:zi, domIndex: domIndex++
+            });
               } catch(e) {}
               for (const d of el.querySelectorAll('*')) covered.add(d);
               covered.add(el);
@@ -1719,7 +1724,7 @@
                 borderTop:0, borderRight:0, borderBottom:0, borderLeft:0, borderColor:null,
                 opacity:parseFloat(cs.opacity)||1, overflow:'hidden',
                 mixBlendMode: cs.mixBlendMode || 'normal',
-                figmaShadows:[], figmaEffects:[], zIndex:zi, children:[] });
+                figmaShadows:[], figmaEffects:[], zIndex:zi, domIndex: domIndex++, children:[] });
               covered.add(el);
               continue;
             }
@@ -1748,7 +1753,6 @@
                 const elHasVis = (elBg && elBg.a > 0.01) || elGrad || elShadows.length ||
                                  elBtw > 0 || elBrw > 0 || elBbw > 0 || elBlw > 0 || elRad > 0;
                 if (elHasVis) {
-                  // Frame de fundo (z ligeiramente menor que o texto)
                   section.children.push({
                     type: 'FRAME', name: el.tagName.toLowerCase() + '-bg',
                     x: rx, y: ry, width: r.width, height: r.height,
@@ -1763,7 +1767,8 @@
                     opacity: parseFloat(cs.opacity) || 1,
                     mixBlendMode: cs.mixBlendMode || 'normal',
                     overflow: cs.overflow, backdropBlur: 0, layerBlur: 0, rotation: 0,
-                    figmaShadows: elShadows, figmaEffects: [], zIndex: zi - 0.01, children: []
+                    figmaShadows: elShadows, figmaEffects: [], zIndex: zi - 0.01,
+                    domIndex: domIndex++, children: []
                   });
                 }
 
@@ -1779,7 +1784,7 @@
                   color: textColor,
                   opacity: parseFloat(cs.opacity) || 1,
                   mixBlendMode: cs.mixBlendMode || 'normal',
-                  zIndex: zi
+                  zIndex: zi, domIndex: domIndex++
                 });
                 for (const d of el.querySelectorAll('*')) covered.add(d);
                 covered.add(el);
@@ -1886,11 +1891,15 @@
               layerBlur,     // layer blur
               rotation,      // §8.3
               figmaShadows: shadows, figmaEffects:[],
-              zIndex: zi, children: []
+              zIndex: zi, domIndex: domIndex++, children: []
             });
           }
 
-          section.children.sort((a,b) => (a.zIndex||0) - (b.zIndex||0));
+            section.children.sort((a, b) => {
+              // Ordena por z-index; empate: DOM order (elemento depois = acima)
+              if ((a.zIndex||0) !== (b.zIndex||0)) return (a.zIndex||0) - (b.zIndex||0);
+              return (a.domIndex||0) - (b.domIndex||0);
+            });
           return section;
         }
 
