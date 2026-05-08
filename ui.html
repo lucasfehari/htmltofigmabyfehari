@@ -557,6 +557,7 @@
   <!-- Tabs -->
   <div class="tabs">
     <div class="tab active" data-tab="editor">Editor</div>
+    <div class="tab" data-tab="fontes">Fontes</div>
     <div class="tab" data-tab="snippets">Exemplos</div>
     <div class="tab" data-tab="info">Info</div>
   </div>
@@ -586,9 +587,44 @@
           <label>Nome do Frame</label>
           <input type="text" id="frame-name" placeholder="Meu Componente">
         </div>
+        <div class="field" style="margin-top: 12px;">
+          <label>Modo de Conversão</label>
+          <div style="display: flex; gap: 8px; margin-top: 6px;">
+            <label style="flex: 1; display: flex; align-items: flex-start; gap: 8px; padding: 10px 12px; background: rgba(124, 92, 252, 0.05); border: 1px solid var(--accent); border-radius: 8px; cursor: pointer; font-size: 11px; color: var(--text);">
+              <input type="radio" name="extraction-mode" value="structured" checked style="accent-color: var(--accent); margin-top: 2px;">
+              <div>
+                <strong>Auto Layout / Estruturado</strong>
+                <div style="color: var(--muted); font-size: 10px; margin-top: 2px; font-weight: normal; line-height: 1.3;">Mantém hierarquia, grupos e flexbox.</div>
+              </div>
+            </label>
+            <label style="flex: 1; display: flex; align-items: flex-start; gap: 8px; padding: 10px 12px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; font-size: 11px; color: var(--text);">
+              <input type="radio" name="extraction-mode" value="flat" style="accent-color: var(--accent); margin-top: 2px;">
+              <div>
+                <strong>Absoluto / Flat (Legado)</strong>
+                <div style="color: var(--muted); font-size: 10px; margin-top: 2px; font-weight: normal; line-height: 1.3;">Camadas planas, posicionadas absolutamente.</div>
+              </div>
+            </label>
+          </div>
+        </div>
       </div>
 
       <div id="status-area"></div>
+    </div>
+
+    <!-- Fontes Panel -->
+    <div class="panel" id="panel-fontes">
+      <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; display: flex; flex-direction: column; gap: 10px;">
+        <h3 style="font-size: 13px; font-weight: 700; color: var(--accent2);">Mapeamento de Fontes</h3>
+        <p style="font-size: 11px; color: var(--muted); line-height: 1.4;">Clique em "Analisar" para carregar as fontes do seu HTML, depois digite o nome exato da fonte instalada no seu Figma para substituir.</p>
+        
+        <button id="btn-scan-fonts" class="preset-btn" style="width: 100%; padding: 10px; background: rgba(124, 92, 252, 0.1); border-color: var(--accent); color: var(--text); font-weight: 600; display: flex; justify-content: center; flex-direction: row; gap: 6px; align-items: center; border-radius: 8px;">
+          🔍 Analisar Fontes do HTML
+        </button>
+        
+        <div id="font-list-container" style="display: flex; flex-direction: column; gap: 8px; margin-top: 8px; max-height: 250px; overflow-y: auto; padding-right: 4px;">
+          <div style="text-align: center; color: var(--muted); font-size: 11px; padding: 20px 0;">Nenhuma fonte analisada ainda. Cole o código e clique em Analisar.</div>
+        </div>
+      </div>
     </div>
 
     <!-- SNIPPETS PANEL -->
@@ -695,7 +731,47 @@
   </div>
 
   <script>
+    // ── Safe Storage Helper to handle sandboxed data URLs / blocked localStorage ───
+    let hasLocalStorage = false;
+    try {
+      hasLocalStorage = typeof window !== 'undefined' && 'localStorage' in window && window.localStorage !== null;
+      // Adicionalmente tenta escrever e deletar uma chave teste para verificar se é funcional
+      window.localStorage.setItem('__test_ls_key__', '1');
+      window.localStorage.removeItem('__test_ls_key__');
+    } catch (e) {
+      hasLocalStorage = false;
+    }
+
+    const safeStorage = {
+      _data: {},
+      getItem(key) {
+        if (hasLocalStorage) {
+          try { return window.localStorage.getItem(key); } catch (e) {}
+        }
+        return this._data[key] || null;
+      },
+      setItem(key, value) {
+        if (hasLocalStorage) {
+          try { window.localStorage.setItem(key, value); return; } catch (e) {}
+        }
+        this._data[key] = value;
+      },
+      getAllKeys() {
+        if (hasLocalStorage) {
+          try {
+            const keys = [];
+            for (let i = 0; i < window.localStorage.length; i++) {
+              keys.push(window.localStorage.key(i));
+            }
+            return keys;
+          } catch (e) {}
+        }
+        return Object.keys(this._data);
+      }
+    };
+
     // ═══════════════════════════════════════════════════════════════════════════════
+    // SNIPPETS
     // SNIPPETS
     // ═══════════════════════════════════════════════════════════════════════════════
     const SNIPPETS = {
@@ -893,11 +969,136 @@
     codeInput.addEventListener('input', () => {
     });
 
+    // Alterna visual dos botões de modo de extração
+    document.querySelectorAll('input[name="extraction-mode"]').forEach(input => {
+      input.addEventListener('change', () => {
+        document.querySelectorAll('input[name="extraction-mode"]').forEach(i => {
+          const lbl = i.closest('label');
+          if (i.checked) {
+            lbl.style.border = '1px solid var(--accent)';
+            lbl.style.background = 'rgba(124, 92, 252, 0.05)';
+          } else {
+            lbl.style.border = '1px solid var(--border)';
+            lbl.style.background = 'var(--surface)';
+          }
+        });
+      });
+    });
+
     // Clear
     document.getElementById('btn-clear').addEventListener('click', () => {
       codeInput.value = '';
       setStatus(null);
     });
+
+    // Scan Fonts
+    document.getElementById('btn-scan-fonts').addEventListener('click', async () => {
+      const code = codeInput.value.trim();
+      if (!code) { setStatus('error', 'Cole algum código HTML primeiro!'); return; }
+      
+      const scanBtn = document.getElementById('btn-scan-fonts');
+      scanBtn.disabled = true;
+      scanBtn.innerText = '⌛ Analisando...';
+      
+      try {
+        let fullHtml = code;
+        if (!code.toLowerCase().includes('<html')) {
+          fullHtml = `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: transparent; display: inline-block; width: fit-content; height: fit-content; }
+</style>
+</head>
+<body>${code}</body>
+</html>`;
+        }
+
+        const iframe = document.getElementById('sandbox') || document.createElement('iframe');
+        iframe.id = 'sandbox';
+        document.body.appendChild(iframe);
+        iframe.style.width = '1440px';
+        iframe.style.height = '1000px';
+        iframe.style.display = 'block';
+        iframe.style.position = 'fixed';
+        iframe.style.opacity = '0';
+        iframe.style.pointerEvents = 'none';
+
+        await new Promise((resolve, reject) => {
+          iframe.onload = resolve;
+          iframe.onerror = reject;
+          iframe.srcdoc = fullHtml;
+          setTimeout(resolve, 1500);
+        });
+
+        const iDoc = iframe.contentDocument || iframe.contentWindow.document;
+        if (!iDoc || !iDoc.body) {
+          throw new Error('Não foi possível renderizar o HTML.');
+        }
+
+        const foundFonts = new Set();
+        const elements = iDoc.body.querySelectorAll('*');
+        
+        for (const el of elements) {
+          const cs = iDoc.defaultView.getComputedStyle(el);
+          if (cs.fontFamily) {
+            let fam = cs.fontFamily.split(',')[0].replace(/['"]/g, '').trim();
+            if (fam && !/^(system|sans-serif|serif|monospace|-apple|-moz)/i.test(fam)) {
+              foundFonts.add(fam);
+            }
+          }
+        }
+
+        const container = document.getElementById('font-list-container');
+        container.innerHTML = '';
+
+        if (foundFonts.size === 0) {
+          container.innerHTML = '<div style="text-align: center; color: var(--muted); font-size: 11px; padding: 20px 0;">Apenas fontes padrão do sistema detectadas.</div>';
+        } else {
+          foundFonts.forEach(font => {
+            const fontRow = document.createElement('div');
+            fontRow.style.display = 'flex';
+            fontRow.style.alignItems = 'center';
+            fontRow.style.justifyContent = 'space-between';
+            fontRow.style.background = 'var(--surface2)';
+            fontRow.style.padding = '8px 10px';
+            fontRow.style.borderRadius = '6px';
+            fontRow.style.gap = '8px';
+            fontRow.style.border = '1px solid var(--border)';
+
+            const savedMap = safeStorage.getItem('font-map-' + font) || font;
+
+            fontRow.innerHTML = `
+              <div style="font-size: 11px; font-weight: 600; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 140px;" title="${font}">
+                \${font}
+              </div>
+              <div style="display: flex; align-items: center; gap: 4px; flex: 1;">
+                <span style="color: var(--muted); font-size: 10px;">➔</span>
+                <input type="text" class="font-override-input" data-orig="\${font}" value="\${savedMap}" placeholder="Inter, Roboto, etc." style="flex: 1; font-size: 11px; padding: 4px 8px; border-radius: 4px; background: var(--surface); border: 1px solid var(--border); color: var(--text); outline: none;">
+              </div>
+            `;
+            container.appendChild(fontRow);
+          });
+          
+          container.querySelectorAll('.font-override-input').forEach(input => {
+            input.addEventListener('input', (e) => {
+              safeStorage.setItem('font-map-' + e.target.dataset.orig, e.target.value.trim());
+            });
+          });
+        }
+
+        setStatus('success', `\${foundFonts.size} fonte(s) identificada(s)!`);
+      } catch (err) {
+        console.error(err);
+        setStatus('error', 'Falha ao analisar fontes.');
+      } finally {
+        scanBtn.disabled = false;
+        scanBtn.innerHTML = '🔍 Analisar Fontes do HTML';
+      }
+    });
+
 
     // Snippets
     document.querySelectorAll('.snippet-card').forEach(card => {
@@ -1202,7 +1403,8 @@
            name: 'svg',
            x: rect.x, y: rect.y, width: Math.max(1, rect.width), height: Math.max(1, rect.height),
            svgData: clone.outerHTML,
-           zIndex: cs.zIndex === 'auto' ? 0 : parseInt(cs.zIndex) || 0
+           zIndex: cs.zIndex === 'auto' ? 0 : parseInt(cs.zIndex) || 0,
+           color: parseColor(cs.color)
          };
       }
 
@@ -1245,11 +1447,16 @@
           ctx.drawImage(el, 0, 0, canvas.width, canvas.height);
           base64Data = canvas.toDataURL('image/png').split(',')[1];
         } catch (e) {
-          console.error("Could not extract image data", e);
+          console.error("Could not extract image data, trying fetch fallback", e);
+        }
+        if (!base64Data && el.src) {
+          imageUrl = el.src;
+          base64Data = await fetchImageBase64(el.src, rect.width, rect.height);
         }
       }
 
-      const fetchImageBase64 = (url, w, h) => new Promise((resolve) => {
+      function fetchImageBase64(url, w, h) {
+        return new Promise((resolve) => {
           const img = new Image();
           img.crossOrigin = 'anonymous';
           img.onload = () => {
@@ -1264,7 +1471,8 @@
           };
           img.onerror = () => resolve(null);
           img.src = url;
-      });
+        });
+      }
 
       if (cs.backgroundImage && cs.backgroundImage !== 'none') {
         if (cs.backgroundImage.includes('gradient')) {
@@ -1436,7 +1644,7 @@
             childJson = tn;
           }
         } else if (child.nodeType === 1) {
-          childJson = await extractDOM(child, doc, parentRect);
+          childJson = await extractDOM(child, doc, rawRect);
         }
         if (childJson) node.children.push(childJson);
       }
@@ -1456,23 +1664,29 @@
                  pGradient = parseGradient(pcs.backgroundImage);
              }
              
+             const pLeft = parseFloat(pcs.left) || 0;
+             const pTop = parseFloat(pcs.top) || 0;
+             const pWidth = pcs.width === 'auto' || !pcs.width ? rect.width : parseFloat(pcs.width) || rect.width;
+             const pHeight = pcs.height === 'auto' || !pcs.height ? rect.height : parseFloat(pcs.height) || rect.height;
+
              const pseudoNode = {
                  type: 'FRAME',
                  name: pseudo,
-                 x: rect.x, y: rect.y,
-                 width: rect.width, height: rect.height,
+                 x: pLeft, y: pTop,
+                 width: pWidth, height: pHeight,
                  paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0,
                  bgColor: isTransparent(pBgColor) ? null : pBgColor,
                  parsedGradient: pGradient,
                  opacity: parseFloat(pcs.opacity) ?? 1,
                  zIndex: pcs.zIndex === 'auto' ? 0 : parseInt(pcs.zIndex) || 0,
+                 position: 'absolute',
                  children: []
              };
              
              if (contentStr && contentStr.trim() !== '') {
                  const tn = makeTextNode(contentStr, pcs);
-                 tn.x = rect.x; tn.y = rect.y;
-                 tn.width = rect.width; tn.height = rect.height;
+                 tn.x = 0; tn.y = 0;
+                 tn.width = pWidth; tn.height = pHeight;
                  pseudoNode.children.push(tn);
              }
              
@@ -1583,6 +1797,16 @@
           throw new Error('Não foi possível renderizar o HTML no iframe.');
         }
 
+        // Aguarda todas as imagens completarem o carregamento para evitar desalinhamento vertical (Layout Shift)
+        const imgs = Array.from(iDoc.querySelectorAll('img'));
+        await Promise.all(imgs.map(img => {
+          if (img.complete) return Promise.resolve();
+          return new Promise(resolve => {
+            img.onload = resolve;
+            img.onerror = resolve;
+          });
+        }));
+
         // Detecta largura real do conteúdo antes de extrair.
         // Para layouts com artboards centralizados (display:flex no body),
         // a largura do iframe precisa ser a do maior artboard, não do body inteiro.
@@ -1681,21 +1905,79 @@
             if (r.width < 1 && r.height < 1) continue;
 
             const zi = effectiveZI(el, cs);
-            // Posição relativa à seção (verdade única: getBoundingClientRect)
-            const rx = r.x - secRect.x;
-            const ry = r.y - secRect.y;
+            
+            // Posição padrão relativa à seção (verdade única)
+            let rx = r.x - secRect.x;
+            let ry = r.y - secRect.y;
+            let rw = r.width;
+            let rh = r.height;
+
+            // §8.3: transform → rotação
+            let rotation = 0;
+            if (cs.transform && cs.transform !== 'none') {
+              const rm = cs.transform.match(/rotate\(([\-\d.]+)deg\)/);
+              if (rm) rotation = -parseFloat(rm[1]); // Figma usa rotação inversa
+              else {
+                const mx = cs.transform.match(/matrix\(([^)]+)\)/);
+                if (mx) {
+                  const v = mx[1].split(',').map(x => parseFloat(x.trim()));
+                  rotation = -Math.atan2(v[1], v[0]) * (180 / Math.PI);
+                }
+              }
+            }
+
+            // Se o elemento estiver rotacionado, ajusta o x e y para compensar o fato
+            // do Figma rotacionar em torno do top-left (enquanto o CSS rotaciona no center)
+            if (rotation !== 0) {
+              const uw = el.offsetWidth || parseFloat(cs.width) || r.width;
+              const uh = el.offsetHeight || parseFloat(cs.height) || r.height;
+              
+              // Centro real do elemento na tela (relativo à seção)
+              const cx = rx + rw / 2;
+              const cy = ry + rh / 2;
+              
+              const theta = -rotation * (Math.PI / 180);
+              const cos = Math.cos(theta);
+              const sin = Math.sin(theta);
+              
+              const cxPrime = (uw / 2) * cos - (uh / 2) * sin;
+              const cyPrime = (uw / 2) * sin + (uh / 2) * cos;
+              
+              rx = cx - cxPrime;
+              ry = cy - cyPrime;
+              rw = uw;
+              rh = uh;
+            }
 
             // ── SVG ─────────────────────────────────────────────────────────
             if (el.tagName === 'SVG') {
               try {
                 const clone = el.cloneNode(true);
-                clone.setAttribute('width', r.width);
-                clone.setAttribute('height', r.height);
+                
+                // Força viewBox correto se não houver mas tiver dimensões originais,
+                // ou se não houver dimensões nenhuma para que escale corretamente no Figma
+                const origW = el.getAttribute('width');
+                const origH = el.getAttribute('height');
+                if (!el.getAttribute('viewBox')) {
+                  if (origW && origH) {
+                    clone.setAttribute('viewBox', `0 0 ${parseFloat(origW)} ${parseFloat(origH)}`);
+                  } else {
+                    clone.setAttribute('viewBox', `0 0 ${rw} ${rh}`);
+                  }
+                }
+                
+                clone.setAttribute('width', rw);
+                clone.setAttribute('height', rh);
+                
+                // Resolve currentColor de forma limpa usando a cor do CSS real
+                const computedColor = parseColor(cs.color) || { r: 0, g: 0, b: 0, a: 1 };
+                
                 section.children.push({
-              type:'SVG', name:'svg', x:rx, y:ry,
-              width:r.width, height:r.height, svgData:clone.outerHTML,
-              zIndex:zi, domIndex: domIndex++
-            });
+                  type: 'SVG', name: 'svg', x: rx, y: ry,
+                  width: rw, height: rh, svgData: clone.outerHTML,
+                  color: computedColor,
+                  zIndex: zi, domIndex: domIndex++
+                });
               } catch(e) {}
               for (const d of el.querySelectorAll('*')) covered.add(d);
               covered.add(el);
@@ -1707,14 +1989,14 @@
               let b64 = null;
               try {
                 const cv = iDoc.createElement('canvas');
-                cv.width = el.naturalWidth || r.width;
-                cv.height = el.naturalHeight || r.height;
+                cv.width = el.naturalWidth || rw;
+                cv.height = el.naturalHeight || rh;
                 const ctx = cv.getContext('2d');
                 ctx.drawImage(el, 0, 0, cv.width, cv.height);
                 b64 = cv.toDataURL('image/png').split(',')[1];
               } catch(e) {}
               section.children.push({ type:'FRAME', name:'Image', x:rx, y:ry,
-                width:r.width, height:r.height, isImage:true, base64Data:b64,
+                width:rw, height:rh, isImage:true, base64Data:b64,
                 objectFit: cs.objectFit || 'cover', // §7.2: mapear para scaleMode
                 bgColor:null, parsedGradient:null,
                 radiusTL:parseFloat(cs.borderTopLeftRadius)||0,
@@ -1755,7 +2037,7 @@
                 if (elHasVis) {
                   section.children.push({
                     type: 'FRAME', name: el.tagName.toLowerCase() + '-bg',
-                    x: rx, y: ry, width: r.width, height: r.height,
+                    x: rx, y: ry, width: rw, height: rh,
                     bgColor: (elBg && elBg.a > 0) ? elBg : null,
                     parsedGradient: elGrad, bgBase64: null, bgObjectFit: 'cover',
                     radiusTL: elRad,
@@ -1774,10 +2056,10 @@
 
                 section.children.push({
                   type: 'TEXT_MIXED', name: el.tagName.toLowerCase(), runs,
-                  x: rx, y: ry, width: r.width, height: r.height,
+                  x: rx, y: ry, width: rw, height: rh,
                   textAlign: cs.textAlign || 'left',
                   lineHeight: isNaN(lh) ? null : lh,
-                  isMultiline: !isNaN(lh) && r.height > lh * 1.5,
+                  isMultiline: !isNaN(lh) && rh > lh * 1.5,
                   textTransform: cs.textTransform || 'none',
                   textDecoration: cs.textDecorationLine || 'none',
                   textOverflow: cs.textOverflow || 'clip',
@@ -1820,20 +2102,6 @@
               if (fm) layerBlur = parseFloat(fm[1]);
             }
 
-            // §8.3: transform → rotação
-            let rotation = 0;
-            if (cs.transform && cs.transform !== 'none') {
-              const rm = cs.transform.match(/rotate\(([\-\d.]+)deg\)/);
-              if (rm) rotation = -parseFloat(rm[1]); // Figma usa rotação inversa
-              else {
-                const mx = cs.transform.match(/matrix\(([^)]+)\)/);
-                if (mx) {
-                  const v = mx[1].split(',').map(x => parseFloat(x.trim()));
-                  rotation = -Math.atan2(v[1], v[0]) * (180 / Math.PI);
-                }
-              }
-            }
-
             // Detecta background-image: url(...) — CSS photo backgrounds
             const hasBgUrl = cs.backgroundImage && cs.backgroundImage !== 'none' && cs.backgroundImage.includes('url(');
 
@@ -1872,7 +2140,7 @@
 
             section.children.push({
               type:'FRAME', name: el.tagName.toLowerCase() + (el.id?'#'+el.id:''),
-              x:rx, y:ry, width:r.width, height:r.height,
+              x:rx, y:ry, width:rw, height:rh,
               bgColor: (bg && bg.a > 0) ? bg : null,
               parsedGradient: grad,
               // bgBase64: CSS background-image url() capturado via canvas
@@ -1895,17 +2163,25 @@
             });
           }
 
-            section.children.sort((a, b) => {
-              // Ordena por z-index; empate: DOM order (elemento depois = acima)
-              if ((a.zIndex||0) !== (b.zIndex||0)) return (a.zIndex||0) - (b.zIndex||0);
-              return (a.domIndex||0) - (b.domIndex||0);
-            });
+          section.children.sort((a, b) => {
+            if ((a.zIndex||0) !== (b.zIndex||0)) return (a.zIndex||0) - (b.zIndex||0);
+            return (a.domIndex||0) - (b.domIndex||0);
+          });
           return section;
         }
 
         const roots = [];
+        const modeEl = document.querySelector('input[name="extraction-mode"]:checked');
+        const mode = modeEl ? modeEl.value : 'structured';
+
         for (const child of iDoc.body.children) {
-          const json = await extractFlat(child);
+          let json;
+          if (mode === 'structured') {
+            const bodyRect = iDoc.body.getBoundingClientRect();
+            json = await extractDOM(child, iDoc, bodyRect);
+          } else {
+            json = await extractFlat(child);
+          }
           if (json) roots.push(json);
         }
 
@@ -1929,6 +2205,26 @@
         const finalWidth = fc ? Math.round(fc.getBoundingClientRect().width) || iDoc.body.scrollWidth : iDoc.body.scrollWidth;
         const finalHeight = iDoc.body.scrollHeight || iDoc.body.offsetHeight;
 
+        const fontMapping = {};
+        const keys = safeStorage.getAllKeys();
+        for (const key of keys) {
+          if (key && key.startsWith('font-map-')) {
+            const origFont = key.substring('font-map-'.length);
+            const targetFont = safeStorage.getItem(key);
+            if (origFont && targetFont) {
+              fontMapping[origFont] = targetFont;
+            }
+          }
+        }
+        document.querySelectorAll('.font-override-input').forEach(input => {
+          const orig = input.dataset.orig;
+          const val = input.value.trim();
+          if (orig && val) {
+            fontMapping[orig] = val;
+            safeStorage.setItem('font-map-' + orig, val);
+          }
+        });
+
         parent.postMessage({
           pluginMessage: {
             type: 'convert',
@@ -1936,6 +2232,7 @@
             width: finalWidth,
             height: finalHeight,
             name: frameName,
+            fontMapping: fontMapping
           }
         }, '*');
 

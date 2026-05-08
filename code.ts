@@ -7,10 +7,17 @@ figma.showUI(__html__, { width: 400, height: 660, themeColors: true });
 
 // ── Cache de fontes carregadas ─────────────────────────────────────────────────
 const loadedFonts = new Set<string>();
+let globalFontMapping: Record<string, string> = {};
 
 async function loadFont(family: string, style: string): Promise<FontName> {
   // Normaliza família (remove aspas, pega primeira da lista)
   let fam = (family || 'Inter').split(',')[0].replace(/['\"]/g, '').trim();
+  
+  // Aplica o mapeamento customizado se configurado pelo usuário
+  if (globalFontMapping[fam]) {
+    fam = globalFontMapping[fam];
+  }
+
   if (!fam || /^(system|sans-serif|serif|monospace|-apple|-moz)/i.test(fam)) fam = 'Inter';
 
   const key = `${fam}::${style}`;
@@ -59,6 +66,16 @@ function makeSolidFill(color: any): Paint[] {
   return [{ type: 'SOLID', color: { r: color.r, g: color.g, b: color.b }, opacity: color.a } as SolidPaint];
 }
 
+function rgbaToCss(color: any): string {
+  if (!color) return 'black';
+  if (typeof color === 'string') return color;
+  const r = Math.round((color.r || 0) * 255);
+  const g = Math.round((color.g || 0) * 255);
+  const b = Math.round((color.b || 0) * 255);
+  const a = color.a !== undefined ? color.a : 1;
+  return `rgba(${r}, ${g}, ${b}, ${a})`;
+}
+
 // ══════════════════════════════════════════════════════════════════════════════
 // CONVERSOR PRINCIPAL
 // ══════════════════════════════════════════════════════════════════════════════
@@ -70,9 +87,9 @@ async function convertNode(node: any, parent: BaseNode | null = null): Promise<S
     if (node.type === 'SVG' && node.svgData) {
       let svg = node.svgData as string;
       // Resolve currentColor usando a cor do texto computada (fallback preto)
-      if (svg.includes('currentColor')) {
-        const parentColor = node.color || 'black';
-        svg = svg.replace(/currentColor/g, parentColor);
+      if (/currentcolor/i.test(svg)) {
+        const parentColor = rgbaToCss(node.color);
+        svg = svg.replace(/currentcolor/gi, parentColor);
       }
       try {
         const svgNode = figma.createNodeFromSvg(svg);
@@ -148,7 +165,11 @@ async function createTextNode(node: any): Promise<TextNode | null> {
   // Line Height §4.3
   const lh = node.lineHeight;
   if (lh && lh !== 'normal' && !isNaN(parseFloat(lh))) {
-    try { text.lineHeight = { value: Math.max(1, parseFloat(lh)), unit: 'PIXELS' }; } catch(e) {}
+    let val = parseFloat(lh);
+    if (val < 8) {
+      val = val * (node.fontSize || 16);
+    }
+    try { text.lineHeight = { value: Math.max(1, val), unit: 'PIXELS' }; } catch(e) {}
   } else {
     try { text.lineHeight = { unit: 'AUTO' }; } catch(e) {}
   }
@@ -240,7 +261,12 @@ async function createMixedTextNode(node: any): Promise<TextNode | null> {
 
   // Propriedades globais do nó
   if (node.lineHeight && !isNaN(node.lineHeight)) {
-    try { text.lineHeight = { value: Math.max(1, node.lineHeight), unit: 'PIXELS' }; } catch(e) {}
+    let val = node.lineHeight;
+    if (val < 8) {
+      const baseFs = runs[0]?.fontSize || 16;
+      val = val * baseFs;
+    }
+    try { text.lineHeight = { value: Math.max(1, val), unit: 'PIXELS' }; } catch(e) {}
   }
   const alignMapM: any = { left: 'LEFT', center: 'CENTER', right: 'RIGHT', justify: 'JUSTIFIED' };
   text.textAlignHorizontal = alignMapM[node.textAlign] || 'LEFT';
@@ -397,15 +423,74 @@ async function createFrameNode(node: any): Promise<FrameNode> {
   // ── Blend Mode §5.5 ──
   applyBlendMode(frame, node);
 
-  // Posicionamento absoluto — coords já são relativas ao frame pai
-  // Manual §10 diretriz 4: não arredondar valores de getBoundingClientRect()
+  // ── Auto Layout Mappings §3.2 §9.2 ──
+  if (node.display === 'flex') {
+    frame.layoutMode = node.flexDirection === 'column' ? 'VERTICAL' : 'HORIZONTAL';
+    
+    const justifyMap: Record<string, 'MIN' | 'CENTER' | 'MAX' | 'SPACE_BETWEEN'> = {
+      'flex-start': 'MIN', 'center': 'CENTER', 'flex-end': 'MAX', 'space-between': 'SPACE_BETWEEN'
+    };
+    frame.primaryAxisAlignItems = justifyMap[node.justifyContent] || 'MIN';
+    
+    const alignMap: Record<string, 'MIN' | 'CENTER' | 'MAX' | 'BASELINE'> = {
+      'flex-start': 'MIN', 'center': 'CENTER', 'flex-end': 'MAX', 'baseline': 'BASELINE'
+    };
+    frame.counterAxisAlignItems = alignMap[node.alignItems] || 'MIN';
+    
+    frame.itemSpacing = node.gap !== undefined ? parseFloat(node.gap) : 0;
+    
+    if (node.flexWrap === 'wrap') {
+      try {
+        frame.layoutWrap = 'WRAP';
+        if (node.rowGap !== undefined) {
+          frame.counterAxisSpacing = parseFloat(node.rowGap);
+        } else {
+          frame.counterAxisSpacing = frame.itemSpacing;
+        }
+      } catch(e) {}
+    }
+    
+    frame.paddingTop = Math.max(0, node.paddingTop || 0);
+    frame.paddingRight = Math.max(0, node.paddingRight || 0);
+    frame.paddingBottom = Math.max(0, node.paddingBottom || 0);
+    frame.paddingLeft = Math.max(0, node.paddingLeft || 0);
+
+    // Ajusta modos de dimensionamento do frame pai baseado em temFixedWidth/hasFixedHeight §3.4
+    frame.primaryAxisSizingMode = node.hasFixedWidth ? 'FIXED' : 'AUTO';
+    frame.counterAxisSizingMode = node.hasFixedHeight ? 'FIXED' : 'AUTO';
+  } else {
+    frame.layoutMode = 'NONE';
+  }
+
+  // Adiciona e posiciona os filhos respeitando o modo de layout (Auto Layout vs NONE)
   const sorted2 = [...(node.children || [])].sort((a: any, b: any) => (a.zIndex || 0) - (b.zIndex || 0));
   for (const child of sorted2) {
     const childNode = await convertNode(child);
     if (childNode) {
       frame.appendChild(childNode);
-      childNode.x = child.x || 0;  // float, sem arredondamento
-      childNode.y = child.y || 0;  // float, sem arredondamento
+      
+      if (frame.layoutMode !== 'NONE') {
+        if (child.position === 'absolute' || child.position === 'fixed') {
+          try {
+            (childNode as any).layoutPositioning = 'ABSOLUTE';
+          } catch(e) {}
+          childNode.x = child.x || 0;
+          childNode.y = child.y || 0;
+        } else {
+          // No fluxo normal do Auto Layout, podemos traduzir propriedades de alinhamento e flex-grow
+          if (child.flexGrow && child.flexGrow > 0) {
+            try { (childNode as any).layoutGrow = 1; } catch(e) {}
+          }
+          if (child.alignSelf === 'stretch') {
+            try { (childNode as any).layoutAlign = 'STRETCH'; } catch(e) {}
+          }
+        }
+      } else {
+        // Coordenadas absolutas normais
+        childNode.x = child.x || 0;
+        childNode.y = child.y || 0;
+      }
+      
       if (child.rotation) (childNode as any).rotation = child.rotation;
     }
   }
@@ -457,6 +542,8 @@ function applyBlendMode(sceneNode: SceneNode, node: any) {
 // ══════════════════════════════════════════════════════════════════════════════
 figma.ui.onmessage = async (msg) => {
   if (msg.type !== 'convert') return;
+
+  globalFontMapping = msg.fontMapping || {};
 
   const nodesJson: any[] = msg.nodes || [];
   if (!nodesJson.length) {
