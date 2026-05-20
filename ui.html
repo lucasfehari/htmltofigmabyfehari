@@ -22,19 +22,8 @@
       --radius: 10px;
     }
 
-    *,
-    *::before,
-    *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html,
-    body {
-      height: 100%;
-      overflow: hidden;
-    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; overflow: hidden; }
 
     body {
       font-family: 'Syne', system-ui, sans-serif;
@@ -47,499 +36,180 @@
 
     /* Header */
     .header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      display: flex; align-items: center; justify-content: space-between;
       padding: 13px 16px 11px;
       border-bottom: 1px solid var(--border);
       flex-shrink: 0;
     }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
+    .logo { display: flex; align-items: center; gap: 8px; }
     .logo-icon {
-      width: 28px;
-      height: 28px;
-      background: var(--accent);
+      width: 28px; height: 28px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
       border-radius: 7px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
       font-size: 14px;
     }
-
-    .logo-text {
-      font-size: 15px;
-      font-weight: 700;
-      letter-spacing: -0.3px;
-    }
-
+    .logo-text { font-size: 15px; font-weight: 700; letter-spacing: -0.3px; }
     .badge {
-      font-size: 9px;
-      font-weight: 600;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: var(--accent2);
-      background: rgba(124, 92, 252, .15);
-      border: 1px solid rgba(124, 92, 252, .3);
-      padding: 3px 7px;
-      border-radius: 20px;
+      font-size: 9px; font-weight: 600; letter-spacing: 1px;
+      text-transform: uppercase; color: var(--accent2);
+      background: rgba(124,92,252,.15); border: 1px solid rgba(124,92,252,.3);
+      padding: 3px 7px; border-radius: 20px;
     }
 
     /* Tabs */
     .tabs {
-      display: flex;
-      padding: 10px 16px 0;
-      gap: 4px;
-      border-bottom: 1px solid var(--border);
-      flex-shrink: 0;
+      display: flex; padding: 10px 16px 0; gap: 4px;
+      border-bottom: 1px solid var(--border); flex-shrink: 0;
     }
-
     .tab {
-      padding: 7px 14px;
-      border-radius: 7px 7px 0 0;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      color: var(--muted);
-      border: 1px solid transparent;
-      border-bottom: none;
-      position: relative;
-      bottom: -1px;
-      background: transparent;
-      transition: all .2s;
+      padding: 7px 14px; border-radius: 7px 7px 0 0;
+      font-size: 12px; font-weight: 600; cursor: pointer;
+      color: var(--muted); border: 1px solid transparent;
+      border-bottom: none; position: relative; bottom: -1px;
+      background: transparent; transition: all .2s;
     }
-
     .tab.active {
-      color: var(--text);
-      background: var(--surface);
-      border-color: var(--border);
-      border-bottom-color: var(--surface);
+      color: var(--text); background: var(--surface);
+      border-color: var(--border); border-bottom-color: var(--surface);
     }
-
-    .tab:hover:not(.active) {
-      color: var(--text);
-      background: var(--surface2);
-    }
+    .tab:hover:not(.active) { color: var(--text); background: var(--surface2); }
 
     /* Content */
     .content {
-      flex: 1;
-      overflow-y: auto;
-      padding: 14px 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
+      flex: 1; overflow-y: auto; padding: 14px 16px;
+      display: flex; flex-direction: column; gap: 12px;
     }
+    .content::-webkit-scrollbar { width: 4px; }
+    .content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
-    .content::-webkit-scrollbar {
-      width: 4px;
-    }
-
-    .content::-webkit-scrollbar-thumb {
-      background: var(--border);
-      border-radius: 4px;
-    }
-
-    .panel {
-      display: none;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .panel.active {
-      display: flex;
-    }
+    .panel { display: none; flex-direction: column; gap: 12px; }
+    .panel.active { display: flex; }
 
     label {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: .5px;
-      text-transform: uppercase;
-      color: var(--muted);
-      display: block;
-      margin-bottom: 5px;
+      font-size: 11px; font-weight: 600; letter-spacing: .5px;
+      text-transform: uppercase; color: var(--muted);
+      display: block; margin-bottom: 5px;
     }
 
     /* Editor */
     .editor-wrap {
-      position: relative;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      overflow: hidden;
-      background: var(--surface);
-      transition: border-color .2s;
+      position: relative; border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden;
+      background: var(--surface); transition: border-color .2s;
     }
-
-    .editor-wrap:focus-within {
-      border-color: var(--accent);
-    }
-
+    .editor-wrap:focus-within { border-color: var(--accent); }
     .editor-toolbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 8px 12px;
-      background: var(--surface2);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 8px 12px; background: var(--surface2);
       border-bottom: 1px solid var(--border);
     }
-
-    .editor-meta {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
     .lang-tag {
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      color: var(--accent2);
-      text-transform: uppercase;
+      font-size: 10px; font-weight: 700; letter-spacing: 1px;
+      color: var(--accent2); text-transform: uppercase;
       font-family: 'JetBrains Mono', monospace;
     }
-
-    .char-count {
-      font-size: 10px;
-      color: var(--muted);
-      font-family: 'JetBrains Mono', monospace;
-    }
-
     .btn-clear {
-      font-size: 11px;
-      color: var(--muted);
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      padding: 3px 6px;
-      border-radius: 4px;
-      transition: all .15s;
-      font-family: 'Syne', sans-serif;
+      font-size: 11px; color: var(--muted); background: transparent;
+      border: none; cursor: pointer; padding: 3px 6px; border-radius: 4px;
+      transition: all .15s; font-family: 'Syne', sans-serif;
     }
-
-    .btn-clear:hover {
-      color: var(--red);
-      background: rgba(248, 113, 113, .1);
-    }
+    .btn-clear:hover { color: var(--red); background: rgba(248,113,113,.1); }
 
     textarea {
-      width: 100%;
-      min-height: 200px;
-      max-height: 300px;
-      background: transparent;
-      border: none;
-      outline: none;
-      resize: vertical;
-      padding: 12px;
+      width: 100%; min-height: 200px; max-height: 300px;
+      background: transparent; border: none; outline: none;
+      resize: vertical; padding: 12px;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
-      line-height: 1.6;
-      color: var(--text);
-      tab-size: 2;
+      font-size: 12px; line-height: 1.6; color: var(--text); tab-size: 2;
     }
+    textarea::placeholder { color: var(--muted); }
+    textarea::-webkit-scrollbar { width: 4px; }
+    textarea::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
-    textarea::placeholder {
-      color: var(--muted);
-    }
+    .field { display: flex; flex-direction: column; }
 
-    textarea::-webkit-scrollbar {
-      width: 4px;
+    input[type="text"], input[type="number"] {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 8px; padding: 8px 11px; font-size: 13px;
+      font-family: 'Syne', sans-serif; color: var(--text);
+      outline: none; transition: border-color .2s; width: 100%;
     }
-
-    textarea::-webkit-scrollbar-thumb {
-      background: var(--border);
-      border-radius: 4px;
-    }
-
-    /* Presets */
-    .presets {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 6px;
-    }
-
-    .preset-btn {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 8px 6px;
-      cursor: pointer;
-      text-align: center;
-      transition: all .15s;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .preset-btn:hover {
-      border-color: var(--accent);
-      background: rgba(124, 92, 252, .08);
-    }
-
-    .preset-btn.selected {
-      border-color: var(--accent);
-      background: rgba(124, 92, 252, .15);
-    }
-
-    .preset-icon {
-      font-size: 16px;
-    }
-
-    .preset-label {
-      font-size: 10px;
-      font-weight: 600;
-      color: var(--muted);
-    }
-
-    .preset-px {
-      font-size: 9px;
-      color: var(--accent2);
-      font-family: 'JetBrains Mono', monospace;
-    }
-
-    /* Options */
-    .options-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .field {
-      display: flex;
-      flex-direction: column;
-    }
-
-    input[type="text"],
-    input[type="number"] {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 8px 11px;
-      font-size: 13px;
-      font-family: 'Syne', sans-serif;
-      color: var(--text);
-      outline: none;
-      transition: border-color .2s;
-      width: 100%;
-    }
-
-    input:focus {
-      border-color: var(--accent);
-    }
+    input:focus { border-color: var(--accent); }
 
     /* Snippets */
-    .snippets-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-    }
-
+    .snippets-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     .snippet-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 12px;
-      cursor: pointer;
-      transition: all .2s;
-      position: relative;
-      overflow: hidden;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 12px; cursor: pointer;
+      transition: all .2s; position: relative; overflow: hidden;
     }
-
     .snippet-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: var(--accent);
-      transform: scaleX(0);
-      transform-origin: left;
-      transition: transform .2s;
+      content: ''; position: absolute; top: 0; left: 0; right: 0;
+      height: 2px; background: var(--accent);
+      transform: scaleX(0); transform-origin: left; transition: transform .2s;
     }
-
-    .snippet-card:hover {
-      border-color: var(--accent);
-    }
-
-    .snippet-card:hover::before {
-      transform: scaleX(1);
-    }
-
-    .snippet-emoji {
-      font-size: 20px;
-      margin-bottom: 6px;
-    }
-
-    .snippet-name {
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--text);
-      margin-bottom: 3px;
-    }
-
-    .snippet-desc {
-      font-size: 10px;
-      color: var(--muted);
-      line-height: 1.4;
-    }
+    .snippet-card:hover { border-color: var(--accent); }
+    .snippet-card:hover::before { transform: scaleX(1); }
+    .snippet-emoji { font-size: 20px; margin-bottom: 6px; }
+    .snippet-name { font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+    .snippet-desc { font-size: 10px; color: var(--muted); line-height: 1.4; }
 
     /* Status */
-    #status-area {
-      min-height: 0;
-    }
-
+    #status-area { min-height: 0; }
     .status-bar {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 14px;
-      border-radius: 8px;
-      font-size: 12px;
-      font-weight: 600;
-      animation: fadeIn .3s;
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 14px; border-radius: 8px;
+      font-size: 12px; font-weight: 600; animation: fadeIn .3s;
     }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(4px);
-      }
-
-      to {
-        opacity: 1;
-        transform: none;
-      }
-    }
-
-    .status-bar.progress {
-      background: rgba(124, 92, 252, .12);
-      color: var(--accent2);
-      border: 1px solid rgba(124, 92, 252, .2);
-    }
-
-    .status-bar.success {
-      background: rgba(52, 211, 153, .1);
-      color: var(--green);
-      border: 1px solid rgba(52, 211, 153, .2);
-    }
-
-    .status-bar.error {
-      background: rgba(248, 113, 113, .1);
-      color: var(--red);
-      border: 1px solid rgba(248, 113, 113, .2);
-    }
-
-    .dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: currentColor;
-      flex-shrink: 0;
-    }
-
-    .dot.pulse {
-      animation: pulse 1s infinite;
-    }
-
-    @keyframes pulse {
-
-      0%,
-      100% {
-        opacity: 1
-      }
-
-      50% {
-        opacity: .3
-      }
-    }
+    @keyframes fadeIn { from { opacity:0; transform:translateY(4px); } to { opacity:1; transform:none; } }
+    .status-bar.progress { background: rgba(124,92,252,.12); color: var(--accent2); border: 1px solid rgba(124,92,252,.2); }
+    .status-bar.success  { background: rgba(52,211,153,.1);  color: var(--green);   border: 1px solid rgba(52,211,153,.2);  }
+    .status-bar.error    { background: rgba(248,113,113,.1); color: var(--red);     border: 1px solid rgba(248,113,113,.2); }
+    .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+    .dot.pulse { animation: pulse 1s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
 
     /* Tip box */
     .tip-box {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-left: 3px solid var(--accent);
-      border-radius: 8px;
-      padding: 10px 12px;
-      font-size: 11px;
-      color: var(--muted);
-      line-height: 1.5;
+      background: var(--surface); border: 1px solid var(--border);
+      border-left: 3px solid var(--accent); border-radius: 8px;
+      padding: 10px 12px; font-size: 11px; color: var(--muted); line-height: 1.5;
     }
-
-    .tip-box strong {
-      color: var(--accent2);
-    }
+    .tip-box strong { color: var(--accent2); }
 
     /* Footer */
-    .footer {
-      padding: 12px 16px;
-      border-top: 1px solid var(--border);
-      flex-shrink: 0;
-    }
-
+    .footer { padding: 12px 16px; border-top: 1px solid var(--border); flex-shrink: 0; }
     .btn-convert {
-      width: 100%;
-      padding: 13px;
-      background: var(--accent);
-      border: none;
-      border-radius: var(--radius);
-      color: white;
-      font-size: 14px;
-      font-weight: 700;
-      font-family: 'Syne', sans-serif;
-      cursor: pointer;
-      letter-spacing: 0.3px;
-      transition: all .2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      position: relative;
-      overflow: hidden;
+      width: 100%; padding: 13px;
+      background: linear-gradient(135deg, var(--accent) 0%, #9b72ff 100%);
+      border: none; border-radius: var(--radius); color: white;
+      font-size: 14px; font-weight: 700; font-family: 'Syne', sans-serif;
+      cursor: pointer; letter-spacing: 0.3px; transition: all .2s;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      position: relative; overflow: hidden;
+      box-shadow: 0 4px 20px rgba(124,92,252,.35);
     }
-
     .btn-convert::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: rgba(255, 255, 255, .08);
-      opacity: 0;
-      transition: opacity .2s;
+      content: ''; position: absolute; inset: 0;
+      background: rgba(255,255,255,.08); opacity: 0; transition: opacity .2s;
     }
+    .btn-convert:hover::after { opacity: 1; }
+    .btn-convert:hover { box-shadow: 0 6px 28px rgba(124,92,252,.5); transform: translateY(-1px); }
+    .btn-convert:active { transform: scale(0.98); }
+    .btn-convert:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
 
-    .btn-convert:hover::after {
-      opacity: 1;
-    }
-
-    .btn-convert:active {
-      transform: scale(0.98);
-    }
-
-    .btn-convert:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    /* Hidden iframe sandbox */
-    #sandbox {
-      display: none;
-    }
+    #sandbox { display: none; }
+    @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
 
 <body>
 
-  <div id="loading-overlay" style="display: none; position: absolute; inset: 0; background: var(--bg); z-index: 999; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
-    <div style="width: 40px; height: 40px; border: 3px solid rgba(124, 92, 252, 0.2); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px;"></div>
-    <div id="loading-text" style="font-weight: 700; font-size: 14px; letter-spacing: -0.3px;">Processando HTML...</div>
-    <div id="loading-subtext" style="font-size: 11px; color: var(--muted); margin-top: 6px; font-family: 'DM Sans', sans-serif;">Renderizando estrutura</div>
-    <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
+  <div id="loading-overlay" style="display:none;position:absolute;inset:0;background:var(--bg);z-index:999;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
+    <div style="width:40px;height:40px;border:3px solid rgba(124,92,252,0.2);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite;margin-bottom:20px;"></div>
+    <div id="loading-text" style="font-weight:700;font-size:14px;letter-spacing:-0.3px;">Processando HTML...</div>
+    <div id="loading-subtext" style="font-size:11px;color:var(--muted);margin-top:6px;">Renderizando estrutura</div>
   </div>
 
   <!-- Hidden iframe for rendering HTML -->
@@ -551,7 +221,7 @@
       <div class="logo-icon">⚡</div>
       <span class="logo-text">Code to Frame</span>
     </div>
-    <span class="badge">v2</span>
+    <span class="badge">v5</span>
   </div>
 
   <!-- Tabs -->
@@ -571,10 +241,7 @@
         <label>Código HTML / CSS</label>
         <div class="editor-wrap">
           <div class="editor-toolbar">
-            <div class="editor-lang">
-              <button class="lang-btn active">HTML</button>
-              <button class="lang-btn" id="btn-css-mode">CSS only</button>
-            </div>
+            <span class="lang-tag">HTML + CSS</span>
             <button class="btn-clear" id="btn-clear">limpar</button>
           </div>
           <textarea id="code-input" placeholder="<!-- Cole seu HTML aqui -->
@@ -583,26 +250,24 @@
   <p style='color:#666;margin-top:8px'>Seu código vira frame.</p>
 </div>"></textarea>
         </div>
-        <div class="field" style="margin-top: 12px;">
+        <div class="field" style="margin-top:12px;">
           <label>Nome do Frame</label>
           <input type="text" id="frame-name" placeholder="Meu Componente">
         </div>
-        <div class="field" style="margin-top: 12px;">
+        <div class="field" style="margin-top:12px;">
           <label>Modo de Conversão</label>
-          <div style="display: flex; gap: 8px; margin-top: 6px;">
-            <label style="flex: 1; display: flex; align-items: flex-start; gap: 8px; padding: 10px 12px; background: rgba(124, 92, 252, 0.05); border: 1px solid var(--accent); border-radius: 8px; cursor: pointer; font-size: 11px; color: var(--text);">
-              <input type="radio" name="extraction-mode" value="structured" checked style="accent-color: var(--accent); margin-top: 2px;">
-              <div>
-                <strong>Auto Layout / Estruturado</strong>
-                <div style="color: var(--muted); font-size: 10px; margin-top: 2px; font-weight: normal; line-height: 1.3;">Mantém hierarquia, grupos e flexbox.</div>
-              </div>
+          <div style="display:flex;gap:8px;margin-top:6px;">
+            <label id="mode-lbl-structured" style="flex:1;display:flex;align-items:flex-start;gap:8px;padding:10px 8px;background:rgba(124,92,252,0.05);border:1px solid var(--accent);border-radius:8px;cursor:pointer;font-size:11px;color:var(--text);">
+              <input type="radio" name="extraction-mode" value="structured" checked style="accent-color:var(--accent);margin-top:2px;">
+              <div><strong>Auto Layout</strong><div style="color:var(--muted);font-size:9px;margin-top:2px;font-weight:normal;line-height:1.3;">Mantém Flexbox/Grid</div></div>
             </label>
-            <label style="flex: 1; display: flex; align-items: flex-start; gap: 8px; padding: 10px 12px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; font-size: 11px; color: var(--text);">
-              <input type="radio" name="extraction-mode" value="flat" style="accent-color: var(--accent); margin-top: 2px;">
-              <div>
-                <strong>Absoluto / Flat (Legado)</strong>
-                <div style="color: var(--muted); font-size: 10px; margin-top: 2px; font-weight: normal; line-height: 1.3;">Camadas planas, posicionadas absolutamente.</div>
-              </div>
+            <label id="mode-lbl-absolute" style="flex:1;display:flex;align-items:flex-start;gap:8px;padding:10px 8px;background:var(--surface);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:11px;color:var(--text);">
+              <input type="radio" name="extraction-mode" value="structured-absolute" style="accent-color:var(--accent);margin-top:2px;">
+              <div><strong>Absoluto</strong><div style="color:var(--muted);font-size:9px;margin-top:2px;font-weight:normal;line-height:1.3;">Sem Auto Layout</div></div>
+            </label>
+            <label id="mode-lbl-flat" style="flex:1;display:flex;align-items:flex-start;gap:8px;padding:10px 8px;background:var(--surface);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:11px;color:var(--text);">
+              <input type="radio" name="extraction-mode" value="flat" style="accent-color:var(--accent);margin-top:2px;">
+              <div><strong>Flat</strong><div style="color:var(--muted);font-size:9px;margin-top:2px;font-weight:normal;line-height:1.3;">Camadas soltas</div></div>
             </label>
           </div>
         </div>
@@ -613,16 +278,14 @@
 
     <!-- Fontes Panel -->
     <div class="panel" id="panel-fontes">
-      <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; display: flex; flex-direction: column; gap: 10px;">
-        <h3 style="font-size: 13px; font-weight: 700; color: var(--accent2);">Mapeamento de Fontes</h3>
-        <p style="font-size: 11px; color: var(--muted); line-height: 1.4;">Clique em "Analisar" para carregar as fontes do seu HTML, depois digite o nome exato da fonte instalada no seu Figma para substituir.</p>
-        
-        <button id="btn-scan-fonts" class="preset-btn" style="width: 100%; padding: 10px; background: rgba(124, 92, 252, 0.1); border-color: var(--accent); color: var(--text); font-weight: 600; display: flex; justify-content: center; flex-direction: row; gap: 6px; align-items: center; border-radius: 8px;">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;display:flex;flex-direction:column;gap:10px;">
+        <h3 style="font-size:13px;font-weight:700;color:var(--accent2);">Mapeamento de Fontes</h3>
+        <p style="font-size:11px;color:var(--muted);line-height:1.4;">Clique em "Analisar" para carregar as fontes do seu HTML, depois digite o nome exato da fonte instalada no Figma.</p>
+        <button id="btn-scan-fonts" style="width:100%;padding:10px;background:rgba(124,92,252,0.1);border:1px solid var(--accent);color:var(--text);font-weight:600;display:flex;justify-content:center;flex-direction:row;gap:6px;align-items:center;border-radius:8px;cursor:pointer;font-family:'Syne',sans-serif;font-size:13px;">
           🔍 Analisar Fontes do HTML
         </button>
-        
-        <div id="font-list-container" style="display: flex; flex-direction: column; gap: 8px; margin-top: 8px; max-height: 250px; overflow-y: auto; padding-right: 4px;">
-          <div style="text-align: center; color: var(--muted); font-size: 11px; padding: 20px 0;">Nenhuma fonte analisada ainda. Cole o código e clique em Analisar.</div>
+        <div id="font-list-container" style="display:flex;flex-direction:column;gap:8px;margin-top:8px;max-height:250px;overflow-y:auto;padding-right:4px;">
+          <div style="text-align:center;color:var(--muted);font-size:11px;padding:20px 0;">Nenhuma fonte analisada ainda.</div>
         </div>
       </div>
     </div>
@@ -631,92 +294,40 @@
     <div class="panel" id="panel-snippets">
       <label>Clique para carregar no editor</label>
       <div class="snippets-grid">
-        <div class="snippet-card" data-snippet="card">
-          <div class="snippet-emoji">🃏</div>
-          <div class="snippet-name">Profile Card</div>
-          <div class="snippet-desc">Card com avatar, nome, bio e botão</div>
-        </div>
-        <div class="snippet-card" data-snippet="instaPost">
-          <div class="snippet-emoji">📸</div>
-          <div class="snippet-name">Post Instagram</div>
-          <div class="snippet-desc">1080×1080 com gradiente e tipografia</div>
-        </div>
-        <div class="snippet-card" data-snippet="buttons">
-          <div class="snippet-emoji">🔘</div>
-          <div class="snippet-name">Botões UI</div>
-          <div class="snippet-desc">Primary, secondary, ghost, disabled</div>
-        </div>
-        <div class="snippet-card" data-snippet="navbar">
-          <div class="snippet-emoji">🧭</div>
-          <div class="snippet-name">Navbar</div>
-          <div class="snippet-desc">Barra de navegação dark</div>
-        </div>
-        <div class="snippet-card" data-snippet="form">
-          <div class="snippet-emoji">📝</div>
-          <div class="snippet-name">Login Form</div>
-          <div class="snippet-desc">Form com campos e botão submit</div>
-        </div>
-        <div class="snippet-card" data-snippet="hero">
-          <div class="snippet-emoji">🦸</div>
-          <div class="snippet-name">Hero Section</div>
-          <div class="snippet-desc">Hero com título, subtítulo e CTA</div>
-        </div>
-        <div class="snippet-card" data-snippet="pricing">
-          <div class="snippet-emoji">💳</div>
-          <div class="snippet-name">Pricing Card</div>
-          <div class="snippet-desc">Card de plano com features list</div>
-        </div>
-        <div class="snippet-card" data-snippet="badge">
-          <div class="snippet-emoji">🏷️</div>
-          <div class="snippet-name">Badges & Tags</div>
-          <div class="snippet-desc">Badges coloridos de status</div>
-        </div>
+        <div class="snippet-card" data-snippet="card"><div class="snippet-emoji">🃏</div><div class="snippet-name">Profile Card</div><div class="snippet-desc">Card com avatar, nome, bio e botão</div></div>
+        <div class="snippet-card" data-snippet="instaPost"><div class="snippet-emoji">📸</div><div class="snippet-name">Post Instagram</div><div class="snippet-desc">1080×1080 com gradiente e tipografia</div></div>
+        <div class="snippet-card" data-snippet="buttons"><div class="snippet-emoji">🔘</div><div class="snippet-name">Botões UI</div><div class="snippet-desc">Primary, secondary, ghost, disabled</div></div>
+        <div class="snippet-card" data-snippet="navbar"><div class="snippet-emoji">🧭</div><div class="snippet-name">Navbar</div><div class="snippet-desc">Barra de navegação dark</div></div>
+        <div class="snippet-card" data-snippet="form"><div class="snippet-emoji">📝</div><div class="snippet-name">Login Form</div><div class="snippet-desc">Form com campos e botão submit</div></div>
+        <div class="snippet-card" data-snippet="hero"><div class="snippet-emoji">🦸</div><div class="snippet-name">Hero Section</div><div class="snippet-desc">Hero com título, subtítulo e CTA</div></div>
+        <div class="snippet-card" data-snippet="pricing"><div class="snippet-emoji">💳</div><div class="snippet-name">Pricing Card</div><div class="snippet-desc">Card de plano com features list</div></div>
+        <div class="snippet-card" data-snippet="grid"><div class="snippet-emoji">⚙️</div><div class="snippet-name">CSS Grid</div><div class="snippet-desc">Layout de 3 colunas com grid</div></div>
       </div>
       <div class="tip-box">
-        <strong>Dica:</strong> Use <code>style=""</code> inline ou uma tag <code>&lt;style&gt;</code>. Gradientes,
-        sombras, border-radius e flex são suportados.
+        <strong>Dica:</strong> Use <code>style=""</code> inline ou uma tag <code>&lt;style&gt;</code>. Gradientes, sombras, border-radius, flex e grid são suportados.
       </div>
     </div>
 
     <!-- INFO PANEL -->
     <div class="panel" id="panel-info">
       <div class="tip-box">
-        <strong>Como funciona:</strong> O HTML é renderizado em um iframe oculto. O plugin lê o DOM com
-        <code>getComputedStyle</code> e <code>getBoundingClientRect</code> e reconstrói cada elemento como frame Figma.
+        <strong>Como funciona:</strong> O HTML é renderizado em um iframe oculto. O plugin lê o DOM com <code>getComputedStyle</code> e <code>getBoundingClientRect</code> e reconstrói cada elemento como frame Figma.
       </div>
       <div>
         <label>Suportado</label>
         <div style="display:flex;flex-direction:column;gap:6px;margin-top:4px">
-          <div class="status-bar success">
-            <div class="dot"></div>Divs, sections, articles, nav, header, footer
-          </div>
-          <div class="status-bar success">
-            <div class="dot"></div>Textos: h1–h6, p, span, a, li, label
-          </div>
-          <div class="status-bar success">
-            <div class="dot"></div>Flexbox → Auto Layout
-          </div>
-          <div class="status-bar success">
-            <div class="dot"></div>Cores sólidas e linear-gradient
-          </div>
-          <div class="status-bar success">
-            <div class="dot"></div>border-radius por canto
-          </div>
-          <div class="status-bar success">
-            <div class="dot"></div>box-shadow → Drop Shadow
-          </div>
-          <div class="status-bar success">
-            <div class="dot"></div>Padding, gap, align, justify
-          </div>
-          <div class="status-bar success">
-            <div class="dot"></div>font-weight → Bold/SemiBold/Light
-          </div>
-          <div class="status-bar progress">
-            <div class="dot pulse"></div>Imagens (placeholder colorido)
-          </div>
-          <div class="status-bar error">
-            <div class="dot"></div>SVG inline, radial-gradient complexo
-          </div>
+          <div class="status-bar success"><div class="dot"></div>Divs, sections, articles, nav, header, footer</div>
+          <div class="status-bar success"><div class="dot"></div>Textos: h1–h6, p, span, a, li, label, button</div>
+          <div class="status-bar success"><div class="dot"></div>Flexbox → Auto Layout + Grid → Wrap</div>
+          <div class="status-bar success"><div class="dot"></div>Cores sólidas, linear-gradient e radial-gradient</div>
+          <div class="status-bar success"><div class="dot"></div>border-radius por canto individual</div>
+          <div class="status-bar success"><div class="dot"></div>box-shadow → Drop Shadow (múltiplas sombras)</div>
+          <div class="status-bar success"><div class="dot"></div>backdrop-filter: blur → Background Blur</div>
+          <div class="status-bar success"><div class="dot"></div>Imagens &lt;img&gt; e CSS background-image</div>
+          <div class="status-bar success"><div class="dot"></div>SVG inline com currentColor resolvido</div>
+          <div class="status-bar success"><div class="dot"></div>Pseudo-elementos ::before e ::after</div>
+          <div class="status-bar success"><div class="dot"></div>text-shadow, outline, mix-blend-mode</div>
+          <div class="status-bar success"><div class="dot"></div>letter-spacing, line-height, text-transform</div>
         </div>
       </div>
     </div>
@@ -731,49 +342,33 @@
   </div>
 
   <script>
-    // ── Safe Storage Helper to handle sandboxed data URLs / blocked localStorage ───
+    // ── Safe Storage ─────────────────────────────────────────────────────────────
     let hasLocalStorage = false;
     try {
-      hasLocalStorage = typeof window !== 'undefined' && 'localStorage' in window && window.localStorage !== null;
-      // Adicionalmente tenta escrever e deletar uma chave teste para verificar se é funcional
-      window.localStorage.setItem('__test_ls_key__', '1');
-      window.localStorage.removeItem('__test_ls_key__');
-    } catch (e) {
-      hasLocalStorage = false;
-    }
+      window.localStorage.setItem('__t__', '1');
+      window.localStorage.removeItem('__t__');
+      hasLocalStorage = true;
+    } catch(e) { hasLocalStorage = false; }
 
     const safeStorage = {
       _data: {},
       getItem(key) {
-        if (hasLocalStorage) {
-          try { return window.localStorage.getItem(key); } catch (e) {}
-        }
+        if (hasLocalStorage) { try { return window.localStorage.getItem(key); } catch(e) {} }
         return this._data[key] || null;
       },
       setItem(key, value) {
-        if (hasLocalStorage) {
-          try { window.localStorage.setItem(key, value); return; } catch (e) {}
-        }
+        if (hasLocalStorage) { try { window.localStorage.setItem(key, value); return; } catch(e) {} }
         this._data[key] = value;
       },
       getAllKeys() {
-        if (hasLocalStorage) {
-          try {
-            const keys = [];
-            for (let i = 0; i < window.localStorage.length; i++) {
-              keys.push(window.localStorage.key(i));
-            }
-            return keys;
-          } catch (e) {}
-        }
+        if (hasLocalStorage) { try { return Object.keys(window.localStorage); } catch(e) {} }
         return Object.keys(this._data);
       }
     };
 
-    // ═══════════════════════════════════════════════════════════════════════════════
+    // ═══════════════════════════════════════════════════════════════════════════
     // SNIPPETS
-    // SNIPPETS
-    // ═══════════════════════════════════════════════════════════════════════════════
+    // ═══════════════════════════════════════════════════════════════════════════
     const SNIPPETS = {
       card: `<div style="background:#ffffff;border-radius:20px;padding:28px;box-shadow:rgba(0,0,0,0.1) 0px 8px 32px;width:320px;display:flex;flex-direction:column;align-items:center;gap:20px;font-family:Inter,sans-serif">
   <div style="width:72px;height:72px;border-radius:36px;background:linear-gradient(135deg,#7c5cfc,#a78bfa)"></div>
@@ -869,7 +464,7 @@
 
       hero: `<div style="background:#0f0f11;padding:80px 48px;display:flex;flex-direction:column;align-items:center;gap:28px;text-align:center;width:800px;font-family:Inter,sans-serif">
   <div style="background:rgba(124,92,252,0.12);border-radius:24px;padding:8px 20px;border:1px solid rgba(124,92,252,0.25)">
-    <span style="color:#a78bfa;font-size:13px;font-weight:600">🚀 Novo — Versão 3.0 disponível agora</span>
+    <span style="color:#a78bfa;font-size:13px;font-weight:600">🚀 Novo — Versão 5.0 disponível agora</span>
   </div>
   <div style="display:flex;flex-direction:column;gap:16px;align-items:center">
     <span style="font-size:52px;font-weight:800;color:#ffffff;line-height:1.15">Construa interfaces<br/>que as pessoas amam</span>
@@ -882,11 +477,6 @@
     <div style="border:1px solid #2e2e38;border-radius:14px;padding:16px 32px">
       <span style="color:#aaaaaa;font-weight:600;font-size:15px">Ver demo</span>
     </div>
-  </div>
-  <div style="display:flex;gap:32px;align-items:center;margin-top:8px">
-    <span style="font-size:13px;color:#555555">✓ Grátis para começar</span>
-    <span style="font-size:13px;color:#555555">✓ Sem cartão de crédito</span>
-    <span style="font-size:13px;color:#555555">✓ Cancele quando quiser</span>
   </div>
 </div>`,
 
@@ -926,35 +516,28 @@
   </div>
 </div>`,
 
-      badge: `<div style="display:flex;flex-direction:column;gap:16px;padding:24px;background:#f5f5f7;border-radius:16px;font-family:Inter,sans-serif">
-  <div style="display:flex;gap:8px;flex-wrap:wrap">
-    <div style="background:#dcfce7;border-radius:20px;padding:5px 14px">
-      <span style="color:#16a34a;font-weight:700;font-size:12px">✓ Ativo</span>
-    </div>
-    <div style="background:#fee2e2;border-radius:20px;padding:5px 14px">
-      <span style="color:#dc2626;font-weight:700;font-size:12px">✕ Erro</span>
-    </div>
-    <div style="background:#fef9c3;border-radius:20px;padding:5px 14px">
-      <span style="color:#ca8a04;font-weight:700;font-size:12px">⚠ Alerta</span>
-    </div>
+      grid: `<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;padding:24px;background:#f5f5f7;border-radius:16px;width:600px;font-family:Inter,sans-serif">
+  <div style="background:#ffffff;border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:10px;box-shadow:0 2px 12px rgba(0,0,0,0.06)">
+    <div style="width:36px;height:36px;background:#7c5cfc;border-radius:10px"></div>
+    <span style="font-weight:700;font-size:14px;color:#111">Feature A</span>
+    <span style="font-size:12px;color:#888;line-height:1.5">Descrição da funcionalidade principal.</span>
   </div>
-  <div style="display:flex;gap:8px;flex-wrap:wrap">
-    <div style="background:#ede9fe;border-radius:20px;padding:5px 14px">
-      <span style="color:#7c3aed;font-weight:700;font-size:12px">★ Premium</span>
-    </div>
-    <div style="background:#dbeafe;border-radius:20px;padding:5px 14px">
-      <span style="color:#1d4ed8;font-weight:700;font-size:12px">✦ Novo</span>
-    </div>
-    <div style="background:#f3f4f6;border-radius:20px;padding:5px 14px">
-      <span style="color:#6b7280;font-weight:700;font-size:12px">○ Inativo</span>
-    </div>
+  <div style="background:#ffffff;border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:10px;box-shadow:0 2px 12px rgba(0,0,0,0.06)">
+    <div style="width:36px;height:36px;background:#34d399;border-radius:10px"></div>
+    <span style="font-weight:700;font-size:14px;color:#111">Feature B</span>
+    <span style="font-size:12px;color:#888;line-height:1.5">Descrição da funcionalidade principal.</span>
+  </div>
+  <div style="background:#ffffff;border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:10px;box-shadow:0 2px 12px rgba(0,0,0,0.06)">
+    <div style="width:36px;height:36px;background:#f87171;border-radius:10px"></div>
+    <span style="font-weight:700;font-size:14px;color:#111">Feature C</span>
+    <span style="font-size:12px;color:#888;line-height:1.5">Descrição da funcionalidade principal.</span>
   </div>
 </div>`,
     };
 
-    // ═══════════════════════════════════════════════════════════════════════════════
+    // ═══════════════════════════════════════════════════════════════════════════
     // TABS
-    // ═══════════════════════════════════════════════════════════════════════════════
+    // ═══════════════════════════════════════════════════════════════════════════
     document.querySelectorAll('.tab').forEach(t => {
       t.addEventListener('click', () => {
         document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
@@ -964,133 +547,61 @@
       });
     });
 
-    // Char counter
-    const codeInput = document.getElementById('code-input');
-    codeInput.addEventListener('input', () => {
-    });
-
-    // Alterna visual dos botões de modo de extração
+    // Radio mode visual
     document.querySelectorAll('input[name="extraction-mode"]').forEach(input => {
       input.addEventListener('change', () => {
         document.querySelectorAll('input[name="extraction-mode"]').forEach(i => {
           const lbl = i.closest('label');
-          if (i.checked) {
-            lbl.style.border = '1px solid var(--accent)';
-            lbl.style.background = 'rgba(124, 92, 252, 0.05)';
-          } else {
-            lbl.style.border = '1px solid var(--border)';
-            lbl.style.background = 'var(--surface)';
-          }
+          if (i.checked) { lbl.style.border='1px solid var(--accent)'; lbl.style.background='rgba(124,92,252,0.05)'; }
+          else { lbl.style.border='1px solid var(--border)'; lbl.style.background='var(--surface)'; }
         });
       });
     });
 
-    // Clear
     document.getElementById('btn-clear').addEventListener('click', () => {
-      codeInput.value = '';
+      document.getElementById('code-input').value = '';
       setStatus(null);
     });
 
     // Scan Fonts
     document.getElementById('btn-scan-fonts').addEventListener('click', async () => {
-      const code = codeInput.value.trim();
+      const code = document.getElementById('code-input').value.trim();
       if (!code) { setStatus('error', 'Cole algum código HTML primeiro!'); return; }
-      
       const scanBtn = document.getElementById('btn-scan-fonts');
-      scanBtn.disabled = true;
-      scanBtn.innerText = '⌛ Analisando...';
-      
+      scanBtn.disabled = true; scanBtn.innerText = '⌛ Analisando...';
       try {
-        let fullHtml = code;
-        if (!code.toLowerCase().includes('<html')) {
-          fullHtml = `<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<style>
-  * { box-sizing: border-box; }
-  html, body { margin: 0; padding: 0; background: transparent; display: inline-block; width: fit-content; height: fit-content; }
-</style>
-</head>
-<body>${code}</body>
-</html>`;
-        }
-
-        const iframe = document.getElementById('sandbox') || document.createElement('iframe');
-        iframe.id = 'sandbox';
-        document.body.appendChild(iframe);
-        iframe.style.width = '1440px';
-        iframe.style.height = '1000px';
-        iframe.style.display = 'block';
-        iframe.style.position = 'fixed';
-        iframe.style.opacity = '0';
-        iframe.style.pointerEvents = 'none';
-
-        await new Promise((resolve, reject) => {
-          iframe.onload = resolve;
-          iframe.onerror = reject;
-          iframe.srcdoc = fullHtml;
-          setTimeout(resolve, 1500);
-        });
-
+        const iframe = prepareIframe(code, '1440px', '1000px');
+        await waitForIframe(iframe, 1500);
         const iDoc = iframe.contentDocument || iframe.contentWindow.document;
-        if (!iDoc || !iDoc.body) {
-          throw new Error('Não foi possível renderizar o HTML.');
-        }
-
         const foundFonts = new Set();
-        const elements = iDoc.body.querySelectorAll('*');
-        
-        for (const el of elements) {
+        iDoc.body.querySelectorAll('*').forEach(el => {
           const cs = iDoc.defaultView.getComputedStyle(el);
-          if (cs.fontFamily) {
-            let fam = cs.fontFamily.split(',')[0].replace(/['"]/g, '').trim();
-            if (fam && !/^(system|sans-serif|serif|monospace|-apple|-moz)/i.test(fam)) {
-              foundFonts.add(fam);
-            }
-          }
-        }
-
+          let fam = (cs.fontFamily || '').split(',')[0].replace(/['"]/g,'').trim();
+          if (fam && !/^(system|sans-serif|serif|monospace|-apple|-moz|ui-)/i.test(fam)) foundFonts.add(fam);
+        });
+        iframe.style.display = 'none';
         const container = document.getElementById('font-list-container');
         container.innerHTML = '';
-
-        if (foundFonts.size === 0) {
-          container.innerHTML = '<div style="text-align: center; color: var(--muted); font-size: 11px; padding: 20px 0;">Apenas fontes padrão do sistema detectadas.</div>';
+        if (!foundFonts.size) {
+          container.innerHTML = '<div style="text-align:center;color:var(--muted);font-size:11px;padding:20px 0;">Apenas fontes padrão do sistema detectadas.</div>';
         } else {
           foundFonts.forEach(font => {
-            const fontRow = document.createElement('div');
-            fontRow.style.display = 'flex';
-            fontRow.style.alignItems = 'center';
-            fontRow.style.justifyContent = 'space-between';
-            fontRow.style.background = 'var(--surface2)';
-            fontRow.style.padding = '8px 10px';
-            fontRow.style.borderRadius = '6px';
-            fontRow.style.gap = '8px';
-            fontRow.style.border = '1px solid var(--border)';
-
-            const savedMap = safeStorage.getItem('font-map-' + font) || font;
-
-            fontRow.innerHTML = `
-              <div style="font-size: 11px; font-weight: 600; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 140px;" title="${font}">
-                \${font}
-              </div>
-              <div style="display: flex; align-items: center; gap: 4px; flex: 1;">
-                <span style="color: var(--muted); font-size: 10px;">➔</span>
-                <input type="text" class="font-override-input" data-orig="\${font}" value="\${savedMap}" placeholder="Inter, Roboto, etc." style="flex: 1; font-size: 11px; padding: 4px 8px; border-radius: 4px; background: var(--surface); border: 1px solid var(--border); color: var(--text); outline: none;">
-              </div>
-            `;
-            container.appendChild(fontRow);
+            const saved = safeStorage.getItem('font-map-' + font) || font;
+            const row = document.createElement('div');
+            row.style.cssText = 'display:flex;align-items:center;justify-content:space-between;background:var(--surface2);padding:8px 10px;border-radius:6px;gap:8px;border:1px solid var(--border);';
+            row.innerHTML = `<div style="font-size:11px;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:140px;" title="${font}">${font}</div>
+              <div style="display:flex;align-items:center;gap:4px;flex:1;">
+                <span style="color:var(--muted);font-size:10px;">➔</span>
+                <input type="text" class="font-override-input" data-orig="${font}" value="${saved}" placeholder="Inter, Roboto..." style="flex:1;font-size:11px;padding:4px 8px;border-radius:4px;background:var(--surface);border:1px solid var(--border);color:var(--text);outline:none;">
+              </div>`;
+            container.appendChild(row);
           });
-          
           container.querySelectorAll('.font-override-input').forEach(input => {
-            input.addEventListener('input', (e) => {
-              safeStorage.setItem('font-map-' + e.target.dataset.orig, e.target.value.trim());
-            });
+            input.addEventListener('input', e => safeStorage.setItem('font-map-' + e.target.dataset.orig, e.target.value.trim()));
           });
         }
-
-        setStatus('success', `\${foundFonts.size} fonte(s) identificada(s)!`);
-      } catch (err) {
+        setStatus('success', `${foundFonts.size} fonte(s) identificada(s)!`);
+      } catch(err) {
         console.error(err);
         setStatus('error', 'Falha ao analisar fontes.');
       } finally {
@@ -1099,12 +610,10 @@
       }
     });
 
-
     // Snippets
     document.querySelectorAll('.snippet-card').forEach(card => {
       card.addEventListener('click', () => {
-        const key = card.dataset.snippet;
-        codeInput.value = SNIPPETS[key] || '';
+        document.getElementById('code-input').value = SNIPPETS[card.dataset.snippet] || '';
         document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
         document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
         document.querySelector('[data-tab="editor"]').classList.add('active');
@@ -1113,9 +622,9 @@
       });
     });
 
-    // ═══════════════════════════════════════════════════════════════════════════════
+    // ═══════════════════════════════════════════════════════════════════════════
     // STATUS
-    // ═══════════════════════════════════════════════════════════════════════════════
+    // ═══════════════════════════════════════════════════════════════════════════
     function setStatus(type, text) {
       const area = document.getElementById('status-area');
       if (!type) { area.innerHTML = ''; return; }
@@ -1123,230 +632,279 @@
       area.innerHTML = `<div class="status-bar ${type}"><div class="${dotCls}"></div>${text}</div>`;
     }
 
-    // ═══════════════════════════════════════════════════════════════════════════════
+    // ═══════════════════════════════════════════════════════════════════════════
+    // IFRAME UTILS
+    // ═══════════════════════════════════════════════════════════════════════════
+    function buildFullHtml(code) {
+      if (code.toLowerCase().includes('<html')) return code;
+      return `<!DOCTYPE html><html><head><meta charset="UTF-8">
+<style>*{box-sizing:border-box;}html,body{margin:0;padding:0;background:transparent;display:inline-block;width:fit-content;height:fit-content;}</style>
+</head><body>${code}</body></html>`;
+    }
+
+    function prepareIframe(code, width, height) {
+      const iframe = document.getElementById('sandbox');
+      iframe.style.width = width;
+      iframe.style.height = height;
+      iframe.style.display = 'block';
+      iframe.style.position = 'fixed';
+      iframe.style.top = '0';
+      iframe.style.left = '0';
+      iframe.style.opacity = '0';
+      iframe.style.pointerEvents = 'none';
+      iframe.style.zIndex = '-9999';
+      iframe.srcdoc = buildFullHtml(code);
+      return iframe;
+    }
+
+    function waitForIframe(iframe, timeout = 1500) {
+      return new Promise(resolve => {
+        const t = setTimeout(resolve, timeout);
+        iframe.onload = () => { clearTimeout(t); setTimeout(resolve, 400); };
+      });
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
     // COLOR PARSERS
-    // ═══════════════════════════════════════════════════════════════════════════════
+    // ═══════════════════════════════════════════════════════════════════════════
     function parseColor(str, insideGradient = false) {
       if (!str) return null;
-      // 'transparent' dentro de gradiente = alpha zero (não preto!)
       if (str === 'transparent' || str === 'rgba(0, 0, 0, 0)') {
-        return insideGradient ? { r: 0, g: 0, b: 0, a: 0 } : null;
+        return insideGradient ? { r:0, g:0, b:0, a:0 } : null;
       }
-      // Suporte a #HEX e #RRGGBBAA
       if (str.startsWith('#')) {
         let hex = str.slice(1);
-        if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+        if (hex.length === 3) hex = hex.split('').map(c => c+c).join('');
         if (hex.length === 6) hex += 'ff';
-        const r = parseInt(hex.slice(0, 2), 16) / 255;
-        const g = parseInt(hex.slice(2, 4), 16) / 255;
-        const b = parseInt(hex.slice(4, 6), 16) / 255;
-        const a = parseInt(hex.slice(6, 8), 16) / 255;
-        return { r, g, b, a };
+        const r = parseInt(hex.slice(0,2),16)/255;
+        const g = parseInt(hex.slice(2,4),16)/255;
+        const b = parseInt(hex.slice(4,6),16)/255;
+        const a = parseInt(hex.slice(6,8),16)/255;
+        return {r,g,b,a};
       }
       const m = str.match(/rgba?\(\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)(?:\s*,\s*([\d.]+))?\s*\)/);
       if (m) {
         return {
-          r: parseInt(m[1]) / 255,
-          g: parseInt(m[2]) / 255,
-          b: parseInt(m[3]) / 255,
+          r: parseInt(m[1])/255, g: parseInt(m[2])/255, b: parseInt(m[3])/255,
           a: m[4] !== undefined ? parseFloat(m[4]) : 1,
         };
       }
+      // hsl? — deixar browser resolver
       return null;
     }
 
-    function isTransparent(color) {
-      return !color || color.a === 0;
-    }
+    function isTransparent(color) { return !color || color.a === 0; }
 
-    function parseBoxShadow(boxShadowStr) {
-      if (!boxShadowStr || boxShadowStr === 'none') return [];
-      const regex = /([^,(]+(?:\([^)]+\))?[^,]*)+/g;
-      const matches = boxShadowStr.match(regex);
-      if (!matches) return [];
+    // ─── Box Shadow Parser ────────────────────────────────────────────────────
+    function parseBoxShadow(str) {
+      if (!str || str === 'none') return [];
+      // Divide em sombras individuais respeitando parênteses
+      const shadows = [];
+      let depth = 0, start = 0;
+      for (let i = 0; i < str.length; i++) {
+        if (str[i] === '(') depth++;
+        else if (str[i] === ')') depth--;
+        else if (str[i] === ',' && depth === 0) {
+          shadows.push(str.slice(start, i).trim());
+          start = i + 1;
+        }
+      }
+      shadows.push(str.slice(start).trim());
 
-      return matches.map(s => {
-        s = s.trim();
+      return shadows.map(s => {
         const isInset = s.includes('inset');
         s = s.replace('inset', '').trim();
-
-        let colorMatch = s.match(/(rgba?\([^)]+\)|#[0-9a-fA-F]+|[a-zA-Z]+)/);
-        let colorStr = colorMatch ? colorMatch[1] : 'rgba(0,0,0,1)';
-        
-        let rest = s.replace(colorStr, '').trim();
-
-        const numRegex = /(-?[\d.]+)px/g;
-        let numbers = [];
-        let match;
-        while ((match = numRegex.exec(rest)) !== null) {
-          numbers.push(parseFloat(match[1]));
-        }
-
+        const colorMatch = s.match(/(rgba?\([^)]+\)|#[0-9a-fA-F]{3,8})/);
+        const colorStr = colorMatch ? colorMatch[1] : 'rgba(0,0,0,0.25)';
+        const rest = s.replace(colorStr, '').trim();
+        const nums = [];
+        let nm; const nr = /(-?[\d.]+)px/g;
+        while ((nm = nr.exec(rest)) !== null) nums.push(parseFloat(nm[1]));
         return {
           inset: isInset,
-          color: parseColor(colorStr) || { r: 0, g: 0, b: 0, a: 1 },
-          x: numbers[0] || 0,
-          y: numbers[1] || 0,
-          blur: numbers[2] || 0,
-          spread: numbers[3] || 0
+          color: parseColor(colorStr) || { r:0, g:0, b:0, a:0.25 },
+          x: nums[0]||0, y: nums[1]||0, blur: nums[2]||0, spread: nums[3]||0
         };
-      });
+      }).filter(s => s.color && s.color.a > 0);
     }
 
+    // ─── Text Shadow Parser ───────────────────────────────────────────────────
+    function parseTextShadow(str) {
+      if (!str || str === 'none') return [];
+      const shadows = [];
+      let depth = 0, start = 0;
+      for (let i = 0; i < str.length; i++) {
+        if (str[i]==='(') depth++;
+        else if (str[i]===')') depth--;
+        else if (str[i]===',' && depth===0) { shadows.push(str.slice(start,i).trim()); start=i+1; }
+      }
+      shadows.push(str.slice(start).trim());
+      return shadows.map(s => {
+        const cm = s.match(/(rgba?\([^)]+\)|#[0-9a-fA-F]{3,8})/);
+        const colorStr = cm ? cm[1] : 'rgba(0,0,0,0.25)';
+        const rest = s.replace(colorStr,'').trim();
+        const nums = []; let nm; const nr = /(-?[\d.]+)px/g;
+        while ((nm = nr.exec(rest)) !== null) nums.push(parseFloat(nm[1]));
+        return { color: parseColor(colorStr)||{r:0,g:0,b:0,a:0.25}, x:nums[0]||0, y:nums[1]||0, blur:nums[2]||0 };
+      }).filter(s => s.color && s.color.a > 0);
+    }
+
+    // ─── Gradient Parser ──────────────────────────────────────────────────────
     function parseGradient(str) {
-      if (!str) return null;
+      if (!str || str === 'none') return null;
       try {
         if (str.includes('linear-gradient')) {
-          let inner = str.match(/linear-gradient\((.*)\)/);
+          const inner = str.match(/linear-gradient\((.*)\)/s);
           if (!inner) return null;
-          let parts = inner[1].split(/,(?![^(]*\))/); 
-          let angleStr = parts[0].trim();
-          let angle = 180;
-          let stopsStart = 0;
-          
-          if (angleStr.includes('deg')) {
-            angle = parseFloat(angleStr);
-            stopsStart = 1;
-          } else if (angleStr.includes('to ')) {
-            if (angleStr.includes('right')) angle = 90;
-            if (angleStr.includes('top')) angle = 0;
-            if (angleStr.includes('left')) angle = 270;
-            if (angleStr.includes('bottom')) angle = 180;
+          const parts = inner[1].split(/,(?![^(]*\))/);
+          let angle = 180, stopsStart = 0;
+          const a0 = parts[0].trim();
+          if (a0.includes('deg')) { angle = parseFloat(a0); stopsStart = 1; }
+          else if (a0.startsWith('to ')) {
+            if (a0.includes('right')) angle=90;
+            else if (a0.includes('top')) angle=0;
+            else if (a0.includes('left')) angle=270;
+            else angle=180;
             stopsStart = 1;
           }
-          
-          let stops = [];
-          const totalParts = parts.length - stopsStart;
+          const stops = [];
+          const total = parts.length - stopsStart;
           for (let i = stopsStart; i < parts.length; i++) {
-            let p = parts[i].trim();
-            // Captura cor rgba/hex/named
-            let colorMatch = p.match(/(rgba?\([^)]+\)|#[0-9a-fA-F]{3,8}|[a-zA-Z]+)/);
-            if (!colorMatch) continue;
-            let cStr = colorMatch[1];
-            let rest = p.replace(cStr, '').trim();
-            // Posição: se tiver %, usa; senão distribui uniformemente
+            const p = parts[i].trim();
+            const cm = p.match(/(rgba?\([^)]+\)|#[0-9a-fA-F]{3,8}|[a-zA-Z]+)/);
+            if (!cm) continue;
+            const cStr = cm[1];
+            const rest = p.replace(cStr,'').trim();
             let pos;
-            if (rest.includes('%')) {
-              pos = parseFloat(rest) / 100;
-            } else {
-              const idx = i - stopsStart;
-              pos = totalParts <= 1 ? 0 : idx / (totalParts - 1);
-            }
-            // parseColor com flag gradient para 'transparent' virar alpha 0
+            if (rest.includes('%')) pos = parseFloat(rest)/100;
+            else { const idx=i-stopsStart; pos=total<=1?0:idx/(total-1); }
             const color = parseColor(cStr, true) || {r:0,g:0,b:0,a:0};
-            stops.push({ color, position: Math.min(1, Math.max(0, pos)) });
+            stops.push({ color, position: Math.min(1,Math.max(0,pos)) });
           }
           if (stops.length < 2) return null;
-          return { type: 'GRADIENT_LINEAR', angle, stops };
+          return { type:'GRADIENT_LINEAR', angle, stops };
         }
-        else if (str.includes('radial-gradient')) {
-          let inner = str.match(/radial-gradient\((.*)\)/);
+        if (str.includes('radial-gradient')) {
+          const inner = str.match(/radial-gradient\((.*)\)/s);
           if (!inner) return null;
-          let parts = inner[1].split(/,(?![^(]*\))/);
-          
+          const parts = inner[1].split(/,(?![^(]*\))/);
           let stopsStart = 0;
-          if (parts[0].includes('circle') || parts[0].includes('ellipse') || parts[0].includes('at ')) {
-             stopsStart = 1;
-          }
-          
-          let stops = [];
-          const totalPartsR = parts.length - stopsStart;
+          const p0 = parts[0].trim();
+          if (p0.includes('circle')||p0.includes('ellipse')||p0.includes('at ')) stopsStart=1;
+          const stops = [];
+          const total = parts.length - stopsStart;
           for (let i = stopsStart; i < parts.length; i++) {
-            let p = parts[i].trim();
-            let colorMatch = p.match(/(rgba?\([^)]+\)|#[0-9a-fA-F]{3,8}|[a-zA-Z]+)/);
-            if (!colorMatch) continue;
-            let cStr = colorMatch[1];
-            let rest = p.replace(cStr, '').trim();
+            const p = parts[i].trim();
+            const cm = p.match(/(rgba?\([^)]+\)|#[0-9a-fA-F]{3,8}|[a-zA-Z]+)/);
+            if (!cm) continue;
+            const cStr = cm[1];
+            const rest = p.replace(cStr,'').trim();
             let pos;
-            if (rest.includes('%')) {
-              pos = parseFloat(rest) / 100;
-            } else {
-              const idx = i - stopsStart;
-              pos = totalPartsR <= 1 ? 0 : idx / (totalPartsR - 1);
-            }
-            const color = parseColor(cStr, true) || {r:0,g:0,b:0,a:0};
-            stops.push({ color, position: Math.min(1, Math.max(0, pos)) });
+            if (rest.includes('%')) pos=parseFloat(rest)/100;
+            else { const idx=i-stopsStart; pos=total<=1?0:idx/(total-1); }
+            const color = parseColor(cStr,true)||{r:0,g:0,b:0,a:0};
+            stops.push({ color, position: Math.min(1,Math.max(0,pos)) });
           }
           if (stops.length < 2) return null;
-          return { type: 'GRADIENT_RADIAL', stops };
+          return { type:'GRADIENT_RADIAL', stops };
         }
-      } catch (e) { console.error(e); }
+      } catch(e) { console.warn('parseGradient error', e); }
       return null;
     }
 
-    // ═══════════════════════════════════════════════════════════════════════════════
-    // DOM → JSON — The core extraction engine
-    // ═══════════════════════════════════════════════════════════════════════════════
-    const TEXT_TAGS = new Set(['SPAN', 'P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'LI', 'TD', 'TH', 'BLOCKQUOTE', 'PRE', 'LABEL', 'A', 'BUTTON']);
-    const SKIP_TAGS = new Set(['SCRIPT', 'STYLE', 'LINK', 'META', 'HEAD', 'TITLE', 'NOSCRIPT', 'IFRAME', 'PATH', 'CIRCLE', 'RECT', 'LINE', 'POLYGON', 'POLYLINE', 'DEFS', 'USE', 'G', 'SYMBOL', 'BR']);
+    // ═══════════════════════════════════════════════════════════════════════════
+    // DOM → JSON — Motor de Extração Principal v5.0
+    // ═══════════════════════════════════════════════════════════════════════════
+    // Tags que produzem TextNode diretamente
+    const TEXT_TAGS = new Set([
+      'SPAN','P','H1','H2','H3','H4','H5','H6',
+      'LI','TD','TH','BLOCKQUOTE','LABEL','A','BUTTON',
+      'INPUT','SELECT','TEXTAREA','CAPTION','DT','DD','FIGCAPTION',
+    ]);
 
-    // Tags puramente inline — não criam bloco novo no layout
-    // SPAN incluído: é inline puro e deve ser capturado como run de texto
-    const INLINE_TAGS = new Set(['SPAN', 'EM', 'STRONG', 'B', 'I', 'SMALL', 'CODE', 'U', 'MARK', 'SUB', 'SUP', 'ABBR', 'CITE', 'S', 'VAR']);
+    // Tags a ignorar completamente
+    const SKIP_TAGS = new Set([
+      'SCRIPT','STYLE','LINK','META','HEAD','TITLE','NOSCRIPT',
+      'IFRAME','PATH','CIRCLE','RECT','LINE','POLYGON','POLYLINE',
+      'DEFS','USE','G','SYMBOL','BR',
+    ]);
+
+    // Tags inline — não criam bloco novo
+    const INLINE_TAGS = new Set([
+      'SPAN','EM','STRONG','B','I','SMALL','CODE','U','MARK',
+      'SUB','SUP','ABBR','CITE','S','VAR','KBD','SAMP','TIME',
+    ]);
 
     // Verifica se TODOS os filhos de um elemento são conteúdo inline
-    // (texto puro, <br>, ou tags inline). Se sim, podemos criar um único TextNode.
     function isAllInline(el) {
       for (const child of el.childNodes) {
-        if (child.nodeType === 3) continue;
+        if (child.nodeType === 3) continue;  // texto puro → ok
         if (child.nodeType !== 1) continue;
         if (child.tagName === 'BR') continue;
         if (INLINE_TAGS.has(child.tagName)) {
           if (!isAllInline(child)) return false;
           continue;
         }
-        return false; // achou filho block-level
+        return false; // filho block-level → não é tudo inline
       }
       return true;
     }
 
-    // Coleta "runs" de texto com suas propriedades CSS individuais (recursivo).
-    // Cada run = { text, fontFamily, fontWeight, fontStyle, fontSize, color, letterSpacing }
+    // Coleta "runs" de texto com propriedades CSS individuais
     function collectTextRuns(el, doc, cs) {
       const runs = [];
-      const transform = (cs.textTransform || 'none').toLowerCase();
+      const transform = (cs.textTransform||'none').toLowerCase();
 
-      function applyTransform(txt) {
-        if (transform === 'uppercase') return txt.toUpperCase();
-        if (transform === 'lowercase') return txt.toLowerCase();
-        if (transform === 'capitalize') return txt.replace(/\b\w/g, c => c.toUpperCase());
+      function applyTT(txt) {
+        if (transform==='uppercase') return txt.toUpperCase();
+        if (transform==='lowercase') return txt.toLowerCase();
+        if (transform==='capitalize') return txt.replace(/\b\w/g, c=>c.toUpperCase());
         return txt;
+      }
+
+      function getLetterSpacingPx(childCs) {
+        const ls = childCs.letterSpacing;
+        if (!ls || ls === 'normal') return 0;
+        // getComputedStyle sempre retorna px para letter-spacing
+        return parseFloat(ls) || 0;
+      }
+
+      function getLineHeightPx(childCs) {
+        const lh = childCs.lineHeight;
+        if (!lh || lh === 'normal') return null;
+        return parseFloat(lh) || null;
       }
 
       for (const child of el.childNodes) {
         if (child.nodeType === 3) {
-          // Nó de texto puro: normaliza espaços e aplica transform
-          let txt = child.textContent.replace(/[\n\r]+/g, '').replace(/\s+/g, ' ');
+          let txt = child.textContent.replace(/[\n\r]+/g,'').replace(/\s+/g,' ');
           if (!txt) continue;
-          txt = applyTransform(txt);
-          let fam = (cs.fontFamily || 'Inter').split(',')[0].replace(/['"]/g, '').trim();
-          if (!fam || /system|sans-serif|serif|monospace/i.test(fam)) fam = 'Inter';
+          txt = applyTT(txt);
+          let fam = (cs.fontFamily||'Inter').split(',')[0].replace(/['"]/g,'').trim();
+          if (!fam||/system|sans-serif|serif|monospace|ui-/i.test(fam)) fam='Inter';
+          const decoMap = {'underline':'underline','line-through':'line-through'};
+          const deco = cs.textDecorationLine || cs.textDecoration || 'none';
           runs.push({
             text: txt,
             fontFamily: fam,
-            fontWeight: parseInt(cs.fontWeight) || 400,
-            fontStyle: cs.fontStyle === 'italic' ? 'italic' : 'normal',
-            fontSize: parseFloat(cs.fontSize) || 16,
-            color: parseColor(cs.color) || { r: 0, g: 0, b: 0, a: 1 },
-            letterSpacing: cs.letterSpacing === 'normal' ? 0 : parseFloat(cs.letterSpacing) || 0,
+            fontWeight: parseInt(cs.fontWeight)||400,
+            fontStyle: cs.fontStyle==='italic'?'italic':'normal',
+            fontSize: parseFloat(cs.fontSize)||16,
+            lineHeight: getLineHeightPx(cs),
+            color: parseColor(cs.color)||{r:0,g:0,b:0,a:1},
+            letterSpacing: getLetterSpacingPx(cs),
+            textDecoration: decoMap[deco]||null,
           });
         } else if (child.nodeType === 1) {
           if (child.tagName === 'BR') {
-            // Quebra de linha: adiciona \n ao último run
-            if (runs.length > 0) {
-              runs[runs.length - 1] = { ...runs[runs.length - 1], text: runs[runs.length - 1].text + '\n' };
-            }
+            if (runs.length>0) runs[runs.length-1] = {...runs[runs.length-1], text:runs[runs.length-1].text+'\n'};
             continue;
           }
-          // Elemento inline (em, strong, span...): usa seu próprio computedStyle
-          // MAS herda textTransform do pai se o filho não tiver próprio
           const childCs = doc.defaultView.getComputedStyle(child);
           const childRuns = collectTextRuns(child, doc, childCs);
-          // Propaga textTransform do pai se o filho não tiver um próprio
-          if (transform !== 'none' && childCs.textTransform === 'none') {
-            for (const run of childRuns) {
-              run.text = applyTransform(run.text);
-            }
+          // Propaga textTransform do pai
+          if (transform!=='none' && childCs.textTransform==='none') {
+            for (const run of childRuns) run.text = applyTT(run.text);
           }
           runs.push(...childRuns);
         }
@@ -1354,833 +912,636 @@
       return runs;
     }
 
+    // Monta o nó de texto simples
+    function makeTextNode(text, cs) {
+      const fw = parseInt(cs.fontWeight)||400;
+      let fam = (cs.fontFamily||'Inter').split(',')[0].replace(/['"]/g,'').trim();
+      if (!fam||/system|sans-serif|serif|monospace|ui-/i.test(fam)) fam='Inter';
+      const color = parseColor(cs.color)||{r:0,g:0,b:0,a:1};
+      const transform = cs.textTransform||'none';
+      let finalText = text;
+      if (transform==='uppercase') finalText=text.toUpperCase();
+      else if (transform==='lowercase') finalText=text.toLowerCase();
+      else if (transform==='capitalize') finalText=text.replace(/\b\w/g,c=>c.toUpperCase());
+      // letterSpacing: getComputedStyle retorna px
+      const ls = cs.letterSpacing;
+      const lsPx = (!ls || ls==='normal') ? 0 : parseFloat(ls)||0;
+      // lineHeight: getComputedStyle retorna px já calculado
+      const lh = cs.lineHeight;
+      const lhPx = (!lh || lh==='normal') ? null : parseFloat(lh)||null;
+      return {
+        type:'TEXT', text:finalText,
+        fontFamily:fam, fontWeight:fw,
+        fontStyle: cs.fontStyle==='italic'?'italic':'normal',
+        fontSize: parseFloat(cs.fontSize)||16,
+        lineHeight: lhPx,
+        letterSpacing: lsPx,
+        textAlign: cs.textAlign||'left',
+        textDecoration: cs.textDecorationLine||cs.textDecoration||'none',
+        textTransform: transform,
+        textShadow: parseTextShadow(cs.textShadow),
+        color,
+      };
+    }
+
+    // ─── Extração Estruturada (modo "structured") ─────────────────────────────
     async function extractDOM(el, doc, parentRect) {
       if (!el) return null;
-      if (el.nodeType === 3 /* TEXT_NODE */) {
-        return null; // Handled in child loop
-      }
-      if (el.nodeType !== 1 /* ELEMENT_NODE */) return null;
+      if (el.nodeType !== 1) return null;
       if (SKIP_TAGS.has(el.tagName)) return null;
 
       const cs = doc.defaultView.getComputedStyle(el);
-      if (cs.display === 'none' || cs.visibility === 'hidden') return null;
+      if (cs.display==='none' || cs.visibility==='hidden' || cs.display==='contents') return null;
 
-      // parentRect = bodyRect passado do loop raiz, garante coords relativas ao body do iframe
       const rawRect = el.getBoundingClientRect();
       const rect = parentRect ? {
-        x: rawRect.x - parentRect.x,
-        y: rawRect.y - parentRect.y,
-        width: rawRect.width,
-        height: rawRect.height
+        x: rawRect.x - parentRect.x, y: rawRect.y - parentRect.y,
+        width: rawRect.width, height: rawRect.height
       } : rawRect;
 
-      if (rect.width < 1 || rect.height < 1) {
-        // elemento invisível — ainda processa para não perder camadas
-      }
-
+      // ── SVG ─────────────────────────────────────────────────────────────────
       if (el.tagName === 'SVG') {
-         const clone = el.cloneNode(true);
-         clone.setAttribute('width', rect.width);
-         clone.setAttribute('height', rect.height);
-         
-         // Recursively bake computed styles into the SVG node to support currentColor and external CSS
-         const bakeSvgStyles = (orig, cln) => {
-             if (orig.nodeType === 1) {
-                 const st = doc.defaultView.getComputedStyle(orig);
-                 if (st.fill && st.fill !== 'none') cln.setAttribute('fill', st.fill);
-                 if (st.stroke && st.stroke !== 'none') cln.setAttribute('stroke', st.stroke);
-                 if (st.strokeWidth && st.strokeWidth !== '0px') cln.setAttribute('stroke-width', st.strokeWidth);
-                 if (st.opacity && st.opacity !== '1') cln.setAttribute('opacity', st.opacity);
-             }
-             for (let i = 0; i < orig.childNodes.length; i++) {
-                 bakeSvgStyles(orig.childNodes[i], cln.childNodes[i]);
-             }
-         };
-         bakeSvgStyles(el, clone);
-
-         return {
-           type: 'SVG',
-           name: 'svg',
-           x: rect.x, y: rect.y, width: Math.max(1, rect.width), height: Math.max(1, rect.height),
-           svgData: clone.outerHTML,
-           zIndex: cs.zIndex === 'auto' ? 0 : parseInt(cs.zIndex) || 0,
-           color: parseColor(cs.color)
-         };
+        const clone = el.cloneNode(true);
+        clone.setAttribute('width', rect.width);
+        clone.setAttribute('height', rect.height);
+        // Bake computed styles (fill, stroke) → resolve currentColor
+        const bakeSvg = (orig, cln) => {
+          if (orig.nodeType===1) {
+            const st = doc.defaultView.getComputedStyle(orig);
+            if (st.fill && st.fill!=='none') cln.setAttribute('fill', st.fill);
+            if (st.stroke && st.stroke!=='none') cln.setAttribute('stroke', st.stroke);
+            if (st.strokeWidth && st.strokeWidth!=='0px') cln.setAttribute('stroke-width', st.strokeWidth);
+            if (st.opacity && st.opacity!=='1') cln.setAttribute('opacity', st.opacity);
+          }
+          for (let i=0; i<orig.childNodes.length; i++) bakeSvg(orig.childNodes[i], cln.childNodes[i]);
+        };
+        bakeSvg(el, clone);
+        return {
+          type:'SVG', name:'svg',
+          x:rect.x, y:rect.y,
+          width:Math.max(1,rect.width), height:Math.max(1,rect.height),
+          svgData:clone.outerHTML, zIndex:parseInt(cs.zIndex)||0,
+          color:parseColor(cs.color)
+        };
       }
 
-      // ─── MIXED TEXT: elemento de texto com apenas conteúdo inline ─────────────
-      // Ex: <h1>Título <em style="color:#4A6CF7">colorido</em></h1>
-      // Cria UM TextNode com setRangeFills() em vez de N frames — igual ao html.to.design.
-      if (TEXT_TAGS.has(el.tagName) && isAllInline(el)) {
-        const runs = collectTextRuns(el, doc, cs);
-        const fullText = runs.map(r => r.text).join('');
-        if (fullText.trim()) {
-          const lh = parseFloat(cs.lineHeight);
+      // ── INPUT / SELECT (captura valor como texto) ─────────────────────────
+      if (el.tagName==='INPUT' || el.tagName==='SELECT' || el.tagName==='TEXTAREA') {
+        const val = el.value || el.placeholder || el.tagName.toLowerCase();
+        if (val) {
+          const lh = cs.lineHeight;
+          const lhPx = (!lh||lh==='normal') ? null : parseFloat(lh)||null;
           return {
-            type: 'TEXT_MIXED',
-            name: el.tagName.toLowerCase(),
-            runs,
-            x: rect.x, y: rect.y,
-            width: rect.width, height: rect.height,
-            textAlign: cs.textAlign || 'left',
-            lineHeight: isNaN(lh) ? null : lh,
-            isMultiline: !isNaN(lh) && rect.height > lh * 1.5,
-            zIndex: cs.zIndex === 'auto' ? 0 : parseInt(cs.zIndex) || 0,
+            type:'TEXT', text:val,
+            x:rect.x, y:rect.y, width:rect.width, height:rect.height,
+            fontFamily:(cs.fontFamily||'Inter').split(',')[0].replace(/['"]/g,'').trim(),
+            fontWeight:parseInt(cs.fontWeight)||400,
+            fontStyle:'normal',
+            fontSize:parseFloat(cs.fontSize)||16,
+            lineHeight:lhPx,
+            letterSpacing:0,
+            textAlign:cs.textAlign||'left',
+            textDecoration:'none',
+            textTransform:'none',
+            textShadow:[],
+            color:parseColor(cs.color)||{r:0,g:0,b:0,a:1},
+            isMultiline:false,
           };
         }
       }
 
-      // Background color and Gradients
+      // ── TEXTO MISTO (elemento de texto com apenas filhos inline) ─────────
+      if (TEXT_TAGS.has(el.tagName) && isAllInline(el)) {
+        const runs = collectTextRuns(el, doc, cs);
+        const fullText = runs.map(r=>r.text).join('');
+        if (fullText.trim()) {
+          const lhPx = (cs.lineHeight && cs.lineHeight!=='normal') ? parseFloat(cs.lineHeight)||null : null;
+          return {
+            type:'TEXT_MIXED', name:el.tagName.toLowerCase(),
+            runs, x:rect.x, y:rect.y, width:rect.width, height:rect.height,
+            textAlign:cs.textAlign||'left',
+            lineHeight:lhPx,
+            isMultiline:lhPx && rect.height > lhPx*1.5,
+            textTransform:cs.textTransform||'none',
+            textDecoration:cs.textDecorationLine||cs.textDecoration||'none',
+            textOverflow:cs.textOverflow||'clip',
+            color:parseColor(cs.color),
+            opacity:parseFloat(cs.opacity)||1,
+            mixBlendMode:cs.mixBlendMode||'normal',
+            zIndex:cs.zIndex==='auto'?0:parseInt(cs.zIndex)||0,
+          };
+        }
+      }
+
+      // ── Background / fills ────────────────────────────────────────────────
       const bgColor = parseColor(cs.backgroundColor);
       let parsedGradient = null;
-      let imageUrl = null;
-      let isImage = false;
-      let base64Data = null;
+      let base64Data = null, imageUrl = null, isImage = false, objectFit = 'cover';
 
       if (el.tagName === 'IMG') {
         isImage = true;
+        objectFit = cs.objectFit || 'cover';
         try {
           const canvas = doc.createElement('canvas');
-          canvas.width = el.naturalWidth || rect.width || 100;
-          canvas.height = el.naturalHeight || rect.height || 100;
+          canvas.width = el.naturalWidth||rect.width||100;
+          canvas.height = el.naturalHeight||rect.height||100;
           const ctx = canvas.getContext('2d');
           ctx.drawImage(el, 0, 0, canvas.width, canvas.height);
           base64Data = canvas.toDataURL('image/png').split(',')[1];
-        } catch (e) {
-          console.error("Could not extract image data, trying fetch fallback", e);
-        }
-        if (!base64Data && el.src) {
-          imageUrl = el.src;
-          base64Data = await fetchImageBase64(el.src, rect.width, rect.height);
-        }
+        } catch(e) {}
+        if (!base64Data && el.src) base64Data = await fetchImgBase64(el.src, rect.width, rect.height);
       }
 
-      function fetchImageBase64(url, w, h) {
-        return new Promise((resolve) => {
-          const img = new Image();
-          img.crossOrigin = 'anonymous';
-          img.onload = () => {
-              try {
-                  const canvas = doc.createElement('canvas');
-                  canvas.width = w || img.width || 100;
-                  canvas.height = h || img.height || 100;
-                  const ctx = canvas.getContext('2d');
-                  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                  resolve(canvas.toDataURL('image/png').split(',')[1]);
-              } catch(e) { resolve(null); }
-          };
-          img.onerror = () => resolve(null);
-          img.src = url;
-        });
-      }
-
-      if (cs.backgroundImage && cs.backgroundImage !== 'none') {
+      if (cs.backgroundImage && cs.backgroundImage!=='none') {
         if (cs.backgroundImage.includes('gradient')) {
           parsedGradient = parseGradient(cs.backgroundImage);
         } else if (cs.backgroundImage.includes('url(')) {
-          const match = cs.backgroundImage.match(/url\(['"]?(.*?)['"]?\)/);
-          if (match && match[1]) {
-            imageUrl = match[1];
-            isImage = true;
-            if (!base64Data) {
-                base64Data = await fetchImageBase64(imageUrl, rect.width, rect.height);
-            }
+          const m = cs.backgroundImage.match(/url\(['"']?(.*?)['"']?\)/);
+          if (m&&m[1]) {
+            imageUrl = m[1]; isImage = true;
+            objectFit = cs.backgroundSize==='cover'?'cover':cs.backgroundSize==='contain'?'contain':'cover';
+            if (!base64Data) base64Data = await fetchImgBase64(imageUrl, rect.width, rect.height);
           }
         }
       }
 
-      // Borders
-      const borderTop = parseFloat(cs.borderTopWidth) || 0;
-      const borderBottom = parseFloat(cs.borderBottomWidth) || 0;
-      const borderLeft = parseFloat(cs.borderLeftWidth) || 0;
-      const borderRight = parseFloat(cs.borderRightWidth) || 0;
-      
-      let borderColorStr = cs.borderTopColor;
-      if (borderBottom > 0) borderColorStr = cs.borderBottomColor;
-      if (borderLeft > 0) borderColorStr = cs.borderLeftColor;
-      if (borderRight > 0) borderColorStr = cs.borderRightColor;
-      
-      const borderColor = parseColor(borderColorStr);
-      
-      // Figma AutoLayout paddings are measured from the outer frame edge, 
-      // overlapping INSIDE strokes. To match CSS visually where content is pushed
-      // by BOTH padding and border, we must sum them.
-      const figmaPaddingTop = (parseFloat(cs.paddingTop) || 0) + borderTop;
-      const figmaPaddingRight = (parseFloat(cs.paddingRight) || 0) + borderRight;
-      const figmaPaddingBottom = (parseFloat(cs.paddingBottom) || 0) + borderBottom;
-      const figmaPaddingLeft = (parseFloat(cs.paddingLeft) || 0) + borderLeft;
-      
-      // Transform (Rotation)
+      // ── Borders ───────────────────────────────────────────────────────────
+      const bTop=parseFloat(cs.borderTopWidth)||0, bRight=parseFloat(cs.borderRightWidth)||0;
+      const bBot=parseFloat(cs.borderBottomWidth)||0, bLeft=parseFloat(cs.borderLeftWidth)||0;
+      const borderColor=parseColor(cs.borderTopColor||cs.borderColor);
+
+      // Padding — soma border para simular box-model correto no Auto Layout
+      const figmaPaddingTop    = (parseFloat(cs.paddingTop)||0) + bTop;
+      const figmaPaddingRight  = (parseFloat(cs.paddingRight)||0) + bRight;
+      const figmaPaddingBottom = (parseFloat(cs.paddingBottom)||0) + bBot;
+      const figmaPaddingLeft   = (parseFloat(cs.paddingLeft)||0) + bLeft;
+
+      // ── Rotation ──────────────────────────────────────────────────────────
       let rotation = 0;
-      if (cs.transform && cs.transform !== 'none') {
-          const match = cs.transform.match(/matrix\(([^)]+)\)/);
-          if (match) {
-              const values = match[1].split(',').map(parseFloat);
-              if (values.length >= 4) {
-                  const a = values[0];
-                  const b = values[1];
-                  rotation = -(Math.atan2(b, a) * (180 / Math.PI));
-              }
-          }
+      if (cs.transform && cs.transform!=='none') {
+        const mx = cs.transform.match(/matrix\(([^)]+)\)/);
+        if (mx) {
+          const v = mx[1].split(',').map(parseFloat);
+          if (v.length>=4) rotation = -(Math.atan2(v[1],v[0])*(180/Math.PI));
+        }
       }
 
-      const isFlex = cs.display === 'flex' || cs.display === 'inline-flex';
-      const isGrid = cs.display === 'grid' || cs.display === 'inline-grid';
-      // Normaliza o display para o Figma entender. Grids são mapeados como flex.
-      const displayMode = (isFlex || isGrid) ? 'flex' : cs.display;
-      // Para grids de múltiplas colunas, usamos HORIZONTAL; grids de coluna única → VERTICAL
+      // ── display mode ─────────────────────────────────────────────────────
+      const isFlex = cs.display==='flex'||cs.display==='inline-flex';
+      const isGrid = cs.display==='grid'||cs.display==='inline-grid';
+      const displayMode = (isFlex||isGrid) ? 'flex' : cs.display;
+
+      // flexDirection: grids mapeados por número de colunas
       let flexDir = isFlex ? cs.flexDirection : 'row';
+      let gridWrap = false;
       if (isGrid) {
         const cols = cs.gridTemplateColumns;
-        // Se tiver mais de 1 coluna explícita, o fluxo principal é horizontal
-        const colCount = cols && cols !== 'none' ? cols.trim().split(/\s+(?=\S)/).length : 1;
+        const colCount = cols&&cols!=='none' ? cols.trim().split(/\s+(?=\S)/).length : 1;
         flexDir = colCount > 1 ? 'row' : 'column';
+        gridWrap = colCount > 1; // grid com múltiplas colunas → layout wrap
       }
 
-      // Detecta se width/height são explicitamente fixos em pixels.
-      // Isso é crítico: um slide 1440×900 deve ter FIXED sizing no Figma,
-      // enquanto um botão sem height definida deve ter Hug (AUTO).
-      const inlineW = el.style.width;
-      const inlineH = el.style.height;
-      const hasFixedWidth  = (inlineW  && inlineW.endsWith('px'))  || rect.width  >= 200;
-      const hasFixedHeight = (inlineH && inlineH.endsWith('px')) || rect.height >= 200;
-
-      const figmaEffects = [];
-      if (cs.filter && cs.filter !== 'none') {
-          const filterMatch = cs.filter.match(/blur\(([\d.]+)px\)/);
-          if (filterMatch) {
-              figmaEffects.push({ type: 'LAYER_BLUR', radius: parseFloat(filterMatch[1]) });
-          }
-      }
-      const backdropFilter = cs.backdropFilter || cs.webkitBackdropFilter;
-      if (backdropFilter && backdropFilter !== 'none') {
-          const bMatch = backdropFilter.match(/blur\(([\d.]+)px\)/);
-          if (bMatch) {
-              figmaEffects.push({ type: 'BACKGROUND_BLUR', radius: parseFloat(bMatch[1]) });
-          }
-      }
-
-      const cls = el.getAttribute('class') || '';
-
-      // Gap: em grids com múltiplas colunas, gap horizontal (column-gap) é o principal.
+      // ── Gap separado por eixo ─────────────────────────────────────────────
       const gapRow    = Math.max(0, parseFloat(cs.rowGap)    || parseFloat(cs.gap) || 0);
       const gapColumn = Math.max(0, parseFloat(cs.columnGap) || parseFloat(cs.gap) || 0);
-      // O eixo principal determina qual gap usar no Figma (itemSpacing)
-      const mainAxisGap = (flexDir || 'row').includes('column') ? gapRow : gapColumn;
+      const mainAxisGap = (flexDir||'row').includes('column') ? gapRow : gapColumn;
+      const crossAxisGap = (flexDir||'row').includes('column') ? gapColumn : gapRow;
 
-      const node = {
-        type: 'FRAME',
-        name: el.tagName.toLowerCase() + (el.id ? `#${el.id}` : cls ? `.${cls.split(' ')[0]}` : ''),
-        x: rect.x,
-        y: rect.y,
-        width: rect.width,
-        height: rect.height,
-        display: displayMode,
-        position: cs.position,
-        flexDirection: flexDir || 'row',
-        alignItems: cs.alignItems || 'flex-start',
-        justifyContent: cs.justifyContent || 'flex-start',
-        flexWrap: cs.flexWrap || 'nowrap',
-        gap: mainAxisGap,
-        paddingTop: figmaPaddingTop,
-        paddingRight: figmaPaddingRight,
-        paddingBottom: figmaPaddingBottom,
-        paddingLeft: figmaPaddingLeft,
-        bgColor: isTransparent(bgColor) ? null : bgColor,
-        parsedGradient: parsedGradient,
-        isImage,
-        base64Data,
-        imageUrl,
-        figmaEffects,
-        overflow: cs.overflow,
-        opacity: parseFloat(cs.opacity) ?? 1,
-        radiusTL: parseFloat(cs.borderTopLeftRadius) || 0,
-        radiusTR: parseFloat(cs.borderTopRightRadius) || 0,
-        radiusBR: parseFloat(cs.borderBottomRightRadius) || 0,
-        radiusBL: parseFloat(cs.borderBottomLeftRadius) || 0,
-        rotation: rotation,
-        borderTop, borderBottom, borderLeft, borderRight,
-        borderColor: isTransparent(borderColor) ? null : borderColor,
-        figmaShadows: parseBoxShadow(cs.boxShadow),
-        zIndex: cs.zIndex === 'auto' ? 0 : parseInt(cs.zIndex) || 0,
-        // Sinaliza ao code.ts se as dimensões são fixas (ex: slide 1440×900)
-        // ou se devem abraçar o conteúdo (Hug, ex: botões, chips)
-        hasFixedWidth,
-        hasFixedHeight,
-        children: [],
+      // ── Fixed/Hug detection ───────────────────────────────────────────────
+      const inlineW=el.style.width, inlineH=el.style.height;
+      const hasFixedWidth  = (inlineW&&inlineW.endsWith('px')) || rect.width  >= 200;
+      const hasFixedHeight = (inlineH&&inlineH.endsWith('px')) || rect.height >= 200;
+
+      // ── isFullWidth ───────────────────────────────────────────────────────
+      const parentCs = el.parentElement ? doc.defaultView.getComputedStyle(el.parentElement) : null;
+      let isFullWidth = inlineW==='100%' || cs.width==='100%';
+      if (cs.display==='block' && parentCs && parentCs.display!=='flex') isFullWidth=true;
+      if (cs.alignSelf==='stretch' || (parentCs&&parentCs.display==='flex'&&parentCs.flexDirection==='column'&&!inlineW)) isFullWidth=true;
+
+      // ── Outline ───────────────────────────────────────────────────────────
+      const outlineWidth = parseFloat(cs.outlineWidth)||0;
+      const outlineColor = outlineWidth>0 ? parseColor(cs.outlineColor) : null;
+
+      // ── Effects ───────────────────────────────────────────────────────────
+      const figmaEffects = [];
+      if (cs.filter&&cs.filter!=='none') {
+        const fm = cs.filter.match(/blur\(([\d.]+)px\)/);
+        if (fm) figmaEffects.push({type:'LAYER_BLUR', radius:parseFloat(fm[1])});
+      }
+      const bdf = cs.backdropFilter||cs.webkitBackdropFilter||'';
+      let backdropBlur=0;
+      if (bdf&&bdf!=='none') {
+        const bm = bdf.match(/blur\(([\d.]+)px\)/);
+        if (bm) backdropBlur=parseFloat(bm[1]);
+      }
+
+      const cssMargin = {
+        top:parseFloat(cs.marginTop)||0, right:parseFloat(cs.marginRight)||0,
+        bottom:parseFloat(cs.marginBottom)||0, left:parseFloat(cs.marginLeft)||0,
       };
 
-      // Extract children
+      const node = {
+        type:'FRAME',
+        name: el.tagName.toLowerCase()+(el.id?`#${el.id}`:el.className?`.${String(el.className).split(' ')[0]}`:''),
+        x:rect.x, y:rect.y, width:rect.width, height:rect.height,
+        display:displayMode,
+        position:cs.position,
+        isFullWidth, cssMargin,
+        flexGrow:parseFloat(cs.flexGrow)||0,
+        alignSelf:cs.alignSelf||'auto',
+        flexDirection:flexDir||'row',
+        alignItems:cs.alignItems||'flex-start',
+        justifyContent:cs.justifyContent||'flex-start',
+        flexWrap:cs.flexWrap||'nowrap',
+        gridWrap,
+        gap:mainAxisGap,
+        rowGap:crossAxisGap,
+        paddingTop:figmaPaddingTop, paddingRight:figmaPaddingRight,
+        paddingBottom:figmaPaddingBottom, paddingLeft:figmaPaddingLeft,
+        bgColor:isTransparent(bgColor)?null:bgColor,
+        parsedGradient,
+        isImage, base64Data, imageUrl, objectFit,
+        figmaEffects, backdropBlur, layerBlur:0,
+        overflow:cs.overflow,
+        opacity:parseFloat(cs.opacity)||1,
+        mixBlendMode:cs.mixBlendMode||'normal',
+        radiusTL:parseFloat(cs.borderTopLeftRadius)||0,
+        radiusTR:parseFloat(cs.borderTopRightRadius)||0,
+        radiusBR:parseFloat(cs.borderBottomRightRadius)||0,
+        radiusBL:parseFloat(cs.borderBottomLeftRadius)||0,
+        rotation,
+        borderTop:bTop, borderRight:bRight, borderBottom:bBot, borderLeft:bLeft,
+        borderColor:isTransparent(borderColor)?null:borderColor,
+        outlineWidth, outlineColor:isTransparent(outlineColor)?null:outlineColor,
+        figmaShadows:parseBoxShadow(cs.boxShadow),
+        zIndex:cs.zIndex==='auto'?0:parseInt(cs.zIndex)||0,
+        hasFixedWidth, hasFixedHeight,
+        children:[],
+      };
+
+      // ── Extract filter layerBlur ──────────────────────────────────────────
+      if (cs.filter&&cs.filter!=='none') {
+        const fm=cs.filter.match(/blur\(([\d.]+)px\)/);
+        if (fm) node.layerBlur=parseFloat(fm[1]);
+      }
+
+      // ── Filhos ────────────────────────────────────────────────────────────
       for (const child of el.childNodes) {
         let childJson = null;
         if (child.nodeType === 3) {
-          // text node
-          const txt = child.textContent.trim().replace(/\s+/g, ' ');
+          const txt = child.textContent.trim().replace(/\s+/g,' ');
           if (txt) {
-            const range = doc.createRange();
-            range.selectNodeContents(child);
-            const textRect = range.getBoundingClientRect();
-
             const tn = makeTextNode(txt, cs);
-
-            // Normaliza coords do text node com o mesmo parentRect (bodyRect) usado pelos elements
-            const bx = parentRect ? parentRect.x : 0;
-            const by = parentRect ? parentRect.y : 0;
-            const tx = (textRect && textRect.width > 0) ? textRect.x - bx : rect.x;
-            const ty = (textRect && textRect.height > 0) ? textRect.y - by : rect.y;
-            const tw = (textRect && textRect.width > 0) ? textRect.width : rect.width;
-            const th = (textRect && textRect.height > 0) ? textRect.height : parseFloat(cs.fontSize) * 1.2;
-
-            const lh = parseFloat(cs.lineHeight);
-            const fs = parseFloat(cs.fontSize);
-            const finalY = (!isNaN(lh) && !isNaN(fs) && lh > 0) ? ty + ((fs - lh) / 2) : ty;
-
-            if (!isNaN(lh) && th > lh * 1.5) tn.isMultiline = true;
-
-            tn.x = tx;
-            tn.y = finalY;
-            tn.width = tw;
-            tn.height = th;
+            // Coordenadas do text node
+            try {
+              const range = doc.createRange();
+              range.selectNodeContents(child);
+              const tRect = range.getBoundingClientRect();
+              const bx = parentRect ? parentRect.x : 0;
+              const by = parentRect ? parentRect.y : 0;
+              tn.x = (tRect&&tRect.width>0) ? tRect.x-bx : rect.x;
+              tn.y = (tRect&&tRect.height>0) ? tRect.y-by : rect.y;
+              tn.width = (tRect&&tRect.width>0) ? tRect.width : rect.width;
+              tn.height = (tRect&&tRect.height>0) ? tRect.height : parseFloat(cs.fontSize)*1.2;
+            } catch(e) {
+              tn.x=rect.x; tn.y=rect.y; tn.width=rect.width; tn.height=parseFloat(cs.fontSize)*1.4||20;
+            }
+            const lhPx = (cs.lineHeight&&cs.lineHeight!=='normal') ? parseFloat(cs.lineHeight)||null : null;
+            if (lhPx && tn.height > lhPx*1.5) tn.isMultiline=true;
             childJson = tn;
           }
-        } else if (child.nodeType === 1) {
+        } else if (child.nodeType===1) {
           childJson = await extractDOM(child, doc, rawRect);
         }
         if (childJson) node.children.push(childJson);
       }
 
-      // Simple pseudo-element extraction
-      for (const pseudo of ['::before', '::after']) {
-         const pcs = doc.defaultView.getComputedStyle(el, pseudo);
-         // Only extract pseudo elements that are absolute (like noise textures, overlays, floating icons)
-         // Inline pseudo elements (like arrows in buttons) cannot be correctly positioned with current engine without layoutMode
-         if (pcs && pcs.position === 'absolute' && pcs.content && pcs.content !== 'none' && pcs.content !== 'normal') {
-             // Create a dummy node representing the pseudo element
-             const contentStr = pcs.content.replace(/^["']|["']$/g, '');
-             const pBgColor = parseColor(pcs.backgroundColor);
-             
-             let pGradient = null;
-             if (pcs.backgroundImage && pcs.backgroundImage !== 'none' && pcs.backgroundImage.includes('gradient')) {
-                 pGradient = parseGradient(pcs.backgroundImage);
-             }
-             
-             const pLeft = parseFloat(pcs.left) || 0;
-             const pTop = parseFloat(pcs.top) || 0;
-             const pWidth = pcs.width === 'auto' || !pcs.width ? rect.width : parseFloat(pcs.width) || rect.width;
-             const pHeight = pcs.height === 'auto' || !pcs.height ? rect.height : parseFloat(pcs.height) || rect.height;
-
-             const pseudoNode = {
-                 type: 'FRAME',
-                 name: pseudo,
-                 x: pLeft, y: pTop,
-                 width: pWidth, height: pHeight,
-                 paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0,
-                 bgColor: isTransparent(pBgColor) ? null : pBgColor,
-                 parsedGradient: pGradient,
-                 opacity: parseFloat(pcs.opacity) ?? 1,
-                 zIndex: pcs.zIndex === 'auto' ? 0 : parseInt(pcs.zIndex) || 0,
-                 position: 'absolute',
-                 children: []
-             };
-             
-             if (contentStr && contentStr.trim() !== '') {
-                 const tn = makeTextNode(contentStr, pcs);
-                 tn.x = 0; tn.y = 0;
-                 tn.width = pWidth; tn.height = pHeight;
-                 pseudoNode.children.push(tn);
-             }
-             
-             node.children.push(pseudoNode);
-         }
+      // ── Pseudo-elementos ::before / ::after ───────────────────────────────
+      for (const pseudo of ['::before','::after']) {
+        const pcs = doc.defaultView.getComputedStyle(el, pseudo);
+        if (pcs && pcs.content && pcs.content!=='none' && pcs.content!=='normal' && pcs.content!=='""') {
+          // Medir a geometria real via getBoundingClientRect (elemento temporário)
+          let px=0, py=0, pw=0, ph=0;
+          try {
+            pw = parseFloat(pcs.width)||0;
+            ph = parseFloat(pcs.height)||0;
+            px = parseFloat(pcs.left)||0;
+            py = parseFloat(pcs.top)||0;
+          } catch(e) {}
+          const pNode = {
+            content:pcs.content,
+            display:pcs.display,
+            position:pcs.position,
+            width:pw, height:ph, x:px, y:py,
+            backgroundColor:parseColor(pcs.backgroundColor),
+            color:parseColor(pcs.color),
+            fontFamily:(pcs.fontFamily||'').split(',')[0].replace(/['"]/g,'').trim(),
+            fontWeight:parseInt(pcs.fontWeight)||400,
+            fontStyle:pcs.fontStyle==='italic'?'italic':'normal',
+            fontSize:parseFloat(pcs.fontSize)||16,
+            parsedGradient:pcs.backgroundImage&&pcs.backgroundImage!=='none'?parseGradient(pcs.backgroundImage):null,
+            radiusTL:parseFloat(pcs.borderTopLeftRadius)||0,
+            radiusTR:parseFloat(pcs.borderTopRightRadius)||0,
+            radiusBR:parseFloat(pcs.borderBottomRightRadius)||0,
+            radiusBL:parseFloat(pcs.borderBottomLeftRadius)||0,
+            zIndex:pcs.zIndex==='auto'?0:parseInt(pcs.zIndex)||0,
+          };
+          if (pseudo==='::before') node.pseudoBefore=pNode;
+          if (pseudo==='::after') node.pseudoAfter=pNode;
+        }
       }
 
-      // Store original index for stable sorting
-      node.children.forEach((c, i) => c._index = i);
-
-      // Sort children by zIndex to map HTML painting order to Figma layer order
-      node.children.sort((a, b) => {
-         const zA = a.zIndex || 0;
-         const zB = b.zIndex || 0;
-         if (zA !== zB) return zA - zB;
-         return a._index - b._index; // Guaranteed stable tiebreaker
+      // Sort children by zIndex, then domIndex
+      node.children.forEach((c,i) => c._di = i);
+      node.children.sort((a,b) => {
+        const zA=a.zIndex||0, zB=b.zIndex||0;
+        if (zA!==zB) return zA-zB;
+        return (a._di||0)-(b._di||0);
       });
-
-      // Cleanup
-      node.children.forEach(c => delete c._index);
+      node.children.forEach(c => delete c._di);
 
       return node;
     }
 
-    function makeTextNode(text, cs) {
-      const fw = parseInt(cs.fontWeight) || 400;
-      const family = (cs.fontFamily || 'Inter').split(',')[0].replace(/['"]/g, '').trim();
-      const color = parseColor(cs.color) || { r: 0, g: 0, b: 0, a: 1 };
-      // Aplica text-transform antes de enviar ao Figma (o Figma não tem essa propriedade nativamente)
-      let finalText = text;
-      const transform = cs.textTransform || 'none';
-      if (transform === 'uppercase') finalText = text.toUpperCase();
-      else if (transform === 'lowercase') finalText = text.toLowerCase();
-      else if (transform === 'capitalize') finalText = text.replace(/\b\w/g, c => c.toUpperCase());
-      return {
-        type: 'TEXT',
-        text: finalText,
-        fontFamily: family,
-        fontWeight: fw,
-        fontStyle: cs.fontStyle === 'italic' ? 'italic' : 'normal',
-        fontSize: parseFloat(cs.fontSize) || 16,
-        lineHeight: cs.lineHeight === 'normal' ? null : parseFloat(cs.lineHeight),
-        // letter-spacing em pixels (computed style já resolve 'em' e '%' para px)
-        letterSpacing: cs.letterSpacing === 'normal' ? 0 : parseFloat(cs.letterSpacing) || 0,
-        textAlign: cs.textAlign || 'left',
-        textDecoration: cs.textDecoration || 'none',
-        color,
-      };
+    // ─── Fetch imagem como base64 via canvas ──────────────────────────────────
+    function fetchImgBase64(url, w, h) {
+      return new Promise(resolve => {
+        const img = new Image();
+        img.crossOrigin='anonymous';
+        img.onload = () => {
+          try {
+            const c = document.createElement('canvas');
+            c.width = w||img.width||100; c.height = h||img.height||100;
+            c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+            resolve(c.toDataURL('image/png').split(',')[1]);
+          } catch(e) { resolve(null); }
+        };
+        img.onerror = () => resolve(null);
+        img.src = url;
+        setTimeout(() => resolve(null), 3000);
+      });
     }
 
-    // ═══════════════════════════════════════════════════════════════════════════════
+    // ─── Extração Flat (modo "flat") ───────────────────────────────────────────
+    async function extractFlat(sectionEl, iDoc, bodyRect) {
+      const secRect = sectionEl.getBoundingClientRect();
+      const secCs = iDoc.defaultView.getComputedStyle(sectionEl);
+      const secBg = parseColor(secCs.backgroundColor);
+      const secGrad = parseGradient(secCs.backgroundImage);
+
+      const section = {
+        type:'FRAME', name:'Section',
+        x:secRect.x-bodyRect.x, y:secRect.y-bodyRect.y,
+        width:secRect.width, height:secRect.height,
+        bgColor:(secBg&&secBg.a>0)?secBg:null, parsedGradient:secGrad,
+        overflow:secCs.overflow, opacity:parseFloat(secCs.opacity)||1,
+        radiusTL:parseFloat(secCs.borderTopLeftRadius)||0,
+        radiusTR:parseFloat(secCs.borderTopRightRadius)||0,
+        radiusBR:parseFloat(secCs.borderBottomRightRadius)||0,
+        radiusBL:parseFloat(secCs.borderBottomLeftRadius)||0,
+        borderTop:0, borderRight:0, borderBottom:0, borderLeft:0,
+        borderColor:null, outlineWidth:0, outlineColor:null,
+        figmaShadows:[], figmaEffects:[], backdropBlur:0, layerBlur:0,
+        zIndex:0, children:[],
+      };
+
+      const SKIP = new Set(['SCRIPT','STYLE','LINK','META','NOSCRIPT','BR','HEAD']);
+      const covered = new Set();
+      let domIndex = 0;
+
+      function effectiveZI(el, cs) {
+        if (cs.zIndex!=='auto') return parseInt(cs.zIndex)||0;
+        let anc = el.parentElement, depth=0;
+        while (anc&&anc!==sectionEl&&depth<10) {
+          const aCs = iDoc.defaultView.getComputedStyle(anc);
+          if (aCs.zIndex!=='auto') return (parseInt(aCs.zIndex)||0)+0.5+depth*0.01;
+          anc=anc.parentElement; depth++;
+        }
+        return 0;
+      }
+
+      for (const el of sectionEl.querySelectorAll('*')) {
+        if (covered.has(el)||SKIP.has(el.tagName)) continue;
+        const cs = iDoc.defaultView.getComputedStyle(el);
+        if (cs.display==='none'||cs.visibility==='hidden') continue;
+        const r = el.getBoundingClientRect();
+        if (r.width<1&&r.height<1) continue;
+        const zi = effectiveZI(el, cs);
+
+        let rx=r.x-secRect.x, ry=r.y-secRect.y, rw=r.width, rh=r.height;
+
+        // Rotation
+        let rotation=0;
+        if (cs.transform&&cs.transform!=='none') {
+          const rm=cs.transform.match(/rotate\((-?[\d.]+)deg\)/);
+          if (rm) rotation=-parseFloat(rm[1]);
+          else { const mx=cs.transform.match(/matrix\(([^)]+)\)/); if (mx) { const v=mx[1].split(',').map(parseFloat); rotation=-Math.atan2(v[1],v[0])*(180/Math.PI); } }
+        }
+
+        // SVG
+        if (el.tagName==='SVG') {
+          try {
+            const clone = el.cloneNode(true);
+            if (!el.getAttribute('viewBox')) clone.setAttribute('viewBox',`0 0 ${rw} ${rh}`);
+            clone.setAttribute('width',rw); clone.setAttribute('height',rh);
+            const pc = parseColor(cs.color)||{r:0,g:0,b:0,a:1};
+            section.children.push({type:'SVG',name:'svg',x:rx,y:ry,width:rw,height:rh,svgData:clone.outerHTML,color:pc,zIndex:zi,domIndex:domIndex++});
+          } catch(e) {}
+          el.querySelectorAll('*').forEach(d=>covered.add(d));
+          covered.add(el); continue;
+        }
+
+        // IMG
+        if (el.tagName==='IMG') {
+          let b64=null;
+          try {
+            const cv=iDoc.createElement('canvas'); cv.width=el.naturalWidth||rw; cv.height=el.naturalHeight||rh;
+            cv.getContext('2d').drawImage(el,0,0,cv.width,cv.height);
+            b64=cv.toDataURL('image/png').split(',')[1];
+          } catch(e) {}
+          section.children.push({
+            type:'FRAME',name:'Image',x:rx,y:ry,width:rw,height:rh,
+            isImage:true,base64Data:b64,objectFit:cs.objectFit||'cover',
+            bgColor:null,parsedGradient:null,
+            radiusTL:parseFloat(cs.borderTopLeftRadius)||0,
+            radiusTR:parseFloat(cs.borderTopRightRadius)||0,
+            radiusBR:parseFloat(cs.borderBottomRightRadius)||0,
+            radiusBL:parseFloat(cs.borderBottomLeftRadius)||0,
+            borderTop:0,borderRight:0,borderBottom:0,borderLeft:0,borderColor:null,
+            outlineWidth:0,outlineColor:null,
+            opacity:parseFloat(cs.opacity)||1,mixBlendMode:cs.mixBlendMode||'normal',
+            overflow:'hidden',backdropBlur:0,layerBlur:0,rotation,
+            figmaShadows:[],figmaEffects:[],zIndex:zi,domIndex:domIndex++,children:[],
+          });
+          covered.add(el); continue;
+        }
+
+        // TEXTO MISTO
+        if (isAllInline(el)) {
+          const runs = collectTextRuns(el, iDoc, cs);
+          const fullTxt = runs.map(x=>x.text).join('');
+          if (fullTxt.trim()) {
+            const lhPx = (cs.lineHeight&&cs.lineHeight!=='normal')?parseFloat(cs.lineHeight)||null:null;
+            const tc = parseColor(cs.color);
+            // Se o elemento tem fundo visual, cria frame de bg primeiro
+            const elBg=parseColor(cs.backgroundColor);
+            const elGrad=parseGradient(cs.backgroundImage);
+            const elBtw=parseFloat(cs.borderTopWidth)||0;
+            const elBrw=parseFloat(cs.borderRightWidth)||0;
+            const elBbw=parseFloat(cs.borderBottomWidth)||0;
+            const elBlw=parseFloat(cs.borderLeftWidth)||0;
+            const elRad=parseFloat(cs.borderTopLeftRadius)||0;
+            const elShadows=parseBoxShadow(cs.boxShadow);
+            const outW=parseFloat(cs.outlineWidth)||0;
+            const hasVis=(elBg&&elBg.a>0.01)||elGrad||elShadows.length||elBtw||elBrw||elBbw||elBlw||elRad>0||outW>0;
+            if (hasVis) {
+              section.children.push({
+                type:'FRAME',name:el.tagName.toLowerCase()+'-bg',
+                x:rx,y:ry,width:rw,height:rh,
+                bgColor:(elBg&&elBg.a>0)?elBg:null, parsedGradient:elGrad,
+                radiusTL:elRad,
+                radiusTR:parseFloat(cs.borderTopRightRadius)||0,
+                radiusBR:parseFloat(cs.borderBottomRightRadius)||0,
+                radiusBL:parseFloat(cs.borderBottomLeftRadius)||0,
+                borderTop:elBtw,borderRight:elBrw,borderBottom:elBbw,borderLeft:elBlw,
+                borderColor:(elBtw||elBrw||elBbw||elBlw)?parseColor(cs.borderColor):null,
+                outlineWidth:outW, outlineColor:outW>0?parseColor(cs.outlineColor):null,
+                opacity:parseFloat(cs.opacity)||1,
+                mixBlendMode:cs.mixBlendMode||'normal',
+                overflow:cs.overflow,backdropBlur:0,layerBlur:0,rotation,
+                figmaShadows:elShadows,figmaEffects:[],zIndex:zi-0.01,domIndex:domIndex++,children:[],
+              });
+            }
+            section.children.push({
+              type:'TEXT_MIXED',name:el.tagName.toLowerCase(),runs,
+              x:rx,y:ry,width:rw,height:rh,
+              textAlign:cs.textAlign||'left',
+              lineHeight:lhPx,
+              isMultiline:lhPx&&rh>lhPx*1.5,
+              textTransform:cs.textTransform||'none',
+              textDecoration:cs.textDecorationLine||'none',
+              textOverflow:cs.textOverflow||'clip',
+              textShadow:parseTextShadow(cs.textShadow),
+              color:tc,opacity:parseFloat(cs.opacity)||1,
+              mixBlendMode:cs.mixBlendMode||'normal',
+              zIndex:zi,domIndex:domIndex++,
+            });
+            el.querySelectorAll('*').forEach(d=>covered.add(d));
+            covered.add(el); continue;
+          }
+        }
+
+        // FRAME VISUAL
+        const bg=parseColor(cs.backgroundColor);
+        const grad=parseGradient(cs.backgroundImage);
+        const btw=parseFloat(cs.borderTopWidth)||0, brw=parseFloat(cs.borderRightWidth)||0;
+        const bbw=parseFloat(cs.borderBottomWidth)||0, blw=parseFloat(cs.borderLeftWidth)||0;
+        const bCol=(btw||brw||bbw||blw)?parseColor(cs.borderColor):null;
+        const outW=parseFloat(cs.outlineWidth)||0;
+        const outCol=outW>0?parseColor(cs.outlineColor):null;
+        const shadows=parseBoxShadow(cs.boxShadow);
+        let backdropBlur=0;
+        const bdf=cs.backdropFilter||cs.webkitBackdropFilter||'';
+        if (bdf&&bdf!=='none') { const bm=bdf.match(/blur\(([\d.]+)px\)/); if (bm) backdropBlur=parseFloat(bm[1]); }
+        let layerBlur=0;
+        if (cs.filter&&cs.filter!=='none') { const fm=cs.filter.match(/blur\(([\d.]+)px\)/); if (fm) layerBlur=parseFloat(fm[1]); }
+        const hasBgUrl=cs.backgroundImage&&cs.backgroundImage!=='none'&&cs.backgroundImage.includes('url(');
+        const hasVis=(bg&&bg.a>0.01)||grad||hasBgUrl||shadows.length||btw||brw||bbw||blw||
+                      parseFloat(cs.borderTopLeftRadius)>0||backdropBlur>0||layerBlur>0||outW>0;
+        if (!hasVis) continue;
+
+        let bgBase64=null, bgObjectFit='cover';
+        if (hasBgUrl&&!grad) {
+          try {
+            const urlM=cs.backgroundImage.match(/url\(["']?([^"')]+)["']?\)/);
+            if (urlM&&urlM[1]) {
+              bgObjectFit=cs.backgroundSize==='cover'?'cover':cs.backgroundSize==='contain'?'contain':'cover';
+              bgBase64=await fetchImgBase64(urlM[1], rw, rh);
+            }
+          } catch(e) {}
+        }
+
+        section.children.push({
+          type:'FRAME',name:el.tagName.toLowerCase()+(el.id?'#'+el.id:''),
+          x:rx,y:ry,width:rw,height:rh,
+          bgColor:(bg&&bg.a>0)?bg:null,parsedGradient:grad,
+          bgBase64:bgBase64||null, bgObjectFit,
+          radiusTL:parseFloat(cs.borderTopLeftRadius)||0,
+          radiusTR:parseFloat(cs.borderTopRightRadius)||0,
+          radiusBR:parseFloat(cs.borderBottomRightRadius)||0,
+          radiusBL:parseFloat(cs.borderBottomLeftRadius)||0,
+          borderTop:btw,borderRight:brw,borderBottom:bbw,borderLeft:blw,borderColor:bCol,
+          outlineWidth:outW, outlineColor:isTransparent(outCol)?null:outCol,
+          opacity:parseFloat(cs.opacity)||1,mixBlendMode:cs.mixBlendMode||'normal',
+          overflow:cs.overflow,backdropBlur,layerBlur,rotation,
+          figmaShadows:shadows,figmaEffects:[],zIndex:zi,domIndex:domIndex++,children:[],
+        });
+      }
+
+      section.children.sort((a,b) => {
+        if ((a.zIndex||0)!==(b.zIndex||0)) return (a.zIndex||0)-(b.zIndex||0);
+        return (a.domIndex||0)-(b.domIndex||0);
+      });
+      return section;
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
     // CONVERT BUTTON
-    // ═══════════════════════════════════════════════════════════════════════════════
+    // ═══════════════════════════════════════════════════════════════════════════
     document.getElementById('btn-convert').addEventListener('click', async () => {
-      const code = codeInput.value.trim();
+      const code = document.getElementById('code-input').value.trim();
       if (!code) { setStatus('error', 'Cole algum código HTML primeiro!'); return; }
 
       const btn = document.getElementById('btn-convert');
       btn.disabled = true;
-      setStatus('progress', 'Renderizando HTML...');
+      setStatus('progress', '🔄 Renderizando HTML...');
 
       const frameName = document.getElementById('frame-name').value.trim() || 'Code to Frame';
+      const modeEl = document.querySelector('input[name="extraction-mode"]:checked');
+      const mode = modeEl ? modeEl.value : 'structured';
 
       try {
-        // Build full HTML doc with viewport only if not provided
-        let fullHtml = code;
-        if (!code.toLowerCase().includes('<html')) {
-          fullHtml = `<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<style>
-  * { box-sizing: border-box; }
-  html, body { margin: 0; padding: 0; background: transparent; display: inline-block; width: fit-content; height: fit-content; }
-</style>
-</head>
-<body>${code}</body>
-</html>`;
-        }
+        // Renderizar em iframe com largura de desktop
+        const iframe = prepareIframe(code, '1440px', '8000px');
 
-        // Write into iframe
-        const iframe = document.getElementById('sandbox') || document.createElement('iframe');
-        iframe.id = 'sandbox';
-        document.body.appendChild(iframe);
-        iframe.style.width = '1440px';
-        iframe.style.height = '8000px';
-        iframe.style.display = 'block';
-        iframe.style.position = 'fixed';
-        iframe.style.top = '0';
-        iframe.style.left = '0';
-        iframe.style.opacity = '0';         // Invisível mas no viewport — coords corretas!
-        iframe.style.pointerEvents = 'none';
-        iframe.style.zIndex = '-9999';
-
-        // Use srcdoc for sandboxed rendering
-        await new Promise((resolve, reject) => {
-          iframe.onload = resolve;
-          iframe.onerror = reject;
-          iframe.srcdoc = fullHtml;
-          setTimeout(resolve, 1500); // Fallback timeout
-        });
-
-        // Give extra time for styles to compute
+        await waitForIframe(iframe, 1500);
         await new Promise(r => setTimeout(r, 300));
 
         const iDoc = iframe.contentDocument || iframe.contentWindow.document;
-        if (!iDoc || !iDoc.body) {
-          throw new Error('Não foi possível renderizar o HTML no iframe.');
-        }
+        if (!iDoc || !iDoc.body) throw new Error('Não foi possível renderizar o HTML no iframe.');
 
-        // Aguarda todas as imagens completarem o carregamento para evitar desalinhamento vertical (Layout Shift)
-        const imgs = Array.from(iDoc.querySelectorAll('img'));
-        await Promise.all(imgs.map(img => {
-          if (img.complete) return Promise.resolve();
-          return new Promise(resolve => {
-            img.onload = resolve;
-            img.onerror = resolve;
-          });
-        }));
+        // Aguardar imagens
+        setStatus('progress', '🖼️ Aguardando imagens...');
+        await Promise.all(Array.from(iDoc.querySelectorAll('img')).map(img =>
+          img.complete ? Promise.resolve() : new Promise(res => { img.onload=res; img.onerror=res; })
+        ));
 
-        // Detecta largura real do conteúdo antes de extrair.
-        // Para layouts com artboards centralizados (display:flex no body),
-        // a largura do iframe precisa ser a do maior artboard, não do body inteiro.
-        const firstChild = iDoc.body.children[0];
-        const contentWidth = firstChild
-          ? Math.round(firstChild.getBoundingClientRect().width) || iDoc.body.scrollWidth
-          : iDoc.body.scrollWidth;
-
-        // Re-ajusta iframe para a largura exata do conteúdo (elimina offsets de flex-center)
-        if (contentWidth > 0 && contentWidth !== parseInt(iframe.style.width)) {
-          iframe.style.width = contentWidth + 'px';
-          // Aguarda reflow
+        // Ajustar largura ao conteúdo real
+        const fc = iDoc.body.children[0];
+        const contentWidth = fc ? Math.round(fc.getBoundingClientRect().width)||iDoc.body.scrollWidth : iDoc.body.scrollWidth;
+        if (contentWidth>0 && contentWidth!==parseInt(iframe.style.width)) {
+          iframe.style.width = contentWidth+'px';
           await new Promise(r => setTimeout(r, 200));
         }
 
-        setStatus('progress', 'Aguardando fontes e imagens...');
-        // Espera fontes carregarem (Google Fonts, etc.)
+        // Aguardar fontes
+        setStatus('progress', '🔤 Aguardando fontes...');
         try { await iDoc.fonts.ready; } catch(e) {}
-        await new Promise(r => setTimeout(r, 500));
+        await new Promise(r => setTimeout(r, 600));
 
-        setStatus('progress', 'Extraindo geometria (Aguarde)...');
+        setStatus('progress', '📐 Extraindo geometria...');
         document.getElementById('loading-text').innerText = 'Lendo coordenadas...';
+        document.getElementById('loading-overlay').style.display = 'flex';
 
-        // ── EXTRAÇÃO FLAT ─────────────────────────────────────────────────────
         const bodyRect = iDoc.body.getBoundingClientRect();
-
-        // Para cada seção do body, visitamos TODOS os descendentes com querySelectorAll.
-        // Cada filho é posicionado com coords simples: el.rect - section.rect.
-        // Zero nesting, zero acumulação de erro — o mesmo princípio do html.to.design.
-        async function extractFlat(sectionEl) {
-          const secRect = sectionEl.getBoundingClientRect();
-          const secCs   = iDoc.defaultView.getComputedStyle(sectionEl);
-
-          // ── Background da seção ──────────────────────────────────────────────
-          const secBg  = parseColor(secCs.backgroundColor);
-          const secGrad = parseGradient(secCs.backgroundImage);
-
-          const section = {
-            type: 'FRAME',
-            name: 'Background',
-            x: secRect.x - bodyRect.x,
-            y: secRect.y - bodyRect.y,
-            width:  secRect.width,
-            height: secRect.height,
-            bgColor: (secBg && secBg.a > 0) ? secBg : null,
-            parsedGradient: secGrad,
-            overflow: secCs.overflow,
-            opacity: parseFloat(secCs.opacity) || 1,
-            radiusTL: parseFloat(secCs.borderTopLeftRadius)    || 0,
-            radiusTR: parseFloat(secCs.borderTopRightRadius)   || 0,
-            radiusBR: parseFloat(secCs.borderBottomRightRadius)|| 0,
-            radiusBL: parseFloat(secCs.borderBottomLeftRadius) || 0,
-            borderTop: 0, borderRight: 0, borderBottom: 0, borderLeft: 0,
-            borderColor: null,
-            figmaShadows: [],
-            figmaEffects: [],
-            zIndex: 0,
-            // Artboards com overflow:hidden devem clipar os filhos — crucial para fidelidade!
-            overflow: secCs.overflow,
-            children: []
-          };
-
-          // Para overflow:hidden, o Figma DEVE clipar o conteúdo
-          section.overflow = secCs.overflow;
-
-          // effectiveZI: filhos com z-index:auto herdam o zIndex do pai posicionado + 0.5
-          // FORA do loop para evitar redeclaração / hoisting problemático
-          function effectiveZI(element, style) {
-            if (style.zIndex !== 'auto') return parseInt(style.zIndex) || 0;
-            let anc = element.parentElement;
-            let depth = 0;
-            while (anc && anc !== sectionEl && depth < 10) {
-              const ancCs = iDoc.defaultView.getComputedStyle(anc);
-              if (ancCs.zIndex !== 'auto') {
-                return (parseInt(ancCs.zIndex) || 0) + 0.5 + depth * 0.01;
-              }
-              anc = anc.parentElement;
-              depth++;
-            }
-            return 0;
-          }
-
-          const SKIP = new Set(['SCRIPT','STYLE','LINK','META','NOSCRIPT','BR','HEAD']);
-          const covered = new Set();
-          let domIndex = 0; // contador DOM para desempate no sort
-
-          const allEls = sectionEl.querySelectorAll('*');
-          for (const el of allEls) {
-            if (covered.has(el)) continue;
-            if (SKIP.has(el.tagName)) continue;
-
-            const cs  = iDoc.defaultView.getComputedStyle(el);
-            if (cs.display === 'none' || cs.visibility === 'hidden') continue;
-
-            const r   = el.getBoundingClientRect();
-            if (r.width < 1 && r.height < 1) continue;
-
-            const zi = effectiveZI(el, cs);
-            
-            // Posição padrão relativa à seção (verdade única)
-            let rx = r.x - secRect.x;
-            let ry = r.y - secRect.y;
-            let rw = r.width;
-            let rh = r.height;
-
-            // §8.3: transform → rotação
-            let rotation = 0;
-            if (cs.transform && cs.transform !== 'none') {
-              const rm = cs.transform.match(/rotate\(([\-\d.]+)deg\)/);
-              if (rm) rotation = -parseFloat(rm[1]); // Figma usa rotação inversa
-              else {
-                const mx = cs.transform.match(/matrix\(([^)]+)\)/);
-                if (mx) {
-                  const v = mx[1].split(',').map(x => parseFloat(x.trim()));
-                  rotation = -Math.atan2(v[1], v[0]) * (180 / Math.PI);
-                }
-              }
-            }
-
-            // Se o elemento estiver rotacionado, ajusta o x e y para compensar o fato
-            // do Figma rotacionar em torno do top-left (enquanto o CSS rotaciona no center)
-            if (rotation !== 0) {
-              const uw = el.offsetWidth || parseFloat(cs.width) || r.width;
-              const uh = el.offsetHeight || parseFloat(cs.height) || r.height;
-              
-              // Centro real do elemento na tela (relativo à seção)
-              const cx = rx + rw / 2;
-              const cy = ry + rh / 2;
-              
-              const theta = -rotation * (Math.PI / 180);
-              const cos = Math.cos(theta);
-              const sin = Math.sin(theta);
-              
-              const cxPrime = (uw / 2) * cos - (uh / 2) * sin;
-              const cyPrime = (uw / 2) * sin + (uh / 2) * cos;
-              
-              rx = cx - cxPrime;
-              ry = cy - cyPrime;
-              rw = uw;
-              rh = uh;
-            }
-
-            // ── SVG ─────────────────────────────────────────────────────────
-            if (el.tagName === 'SVG') {
-              try {
-                const clone = el.cloneNode(true);
-                
-                // Força viewBox correto se não houver mas tiver dimensões originais,
-                // ou se não houver dimensões nenhuma para que escale corretamente no Figma
-                const origW = el.getAttribute('width');
-                const origH = el.getAttribute('height');
-                if (!el.getAttribute('viewBox')) {
-                  if (origW && origH) {
-                    clone.setAttribute('viewBox', `0 0 ${parseFloat(origW)} ${parseFloat(origH)}`);
-                  } else {
-                    clone.setAttribute('viewBox', `0 0 ${rw} ${rh}`);
-                  }
-                }
-                
-                clone.setAttribute('width', rw);
-                clone.setAttribute('height', rh);
-                
-                // Resolve currentColor de forma limpa usando a cor do CSS real
-                const computedColor = parseColor(cs.color) || { r: 0, g: 0, b: 0, a: 1 };
-                
-                section.children.push({
-                  type: 'SVG', name: 'svg', x: rx, y: ry,
-                  width: rw, height: rh, svgData: clone.outerHTML,
-                  color: computedColor,
-                  zIndex: zi, domIndex: domIndex++
-                });
-              } catch(e) {}
-              for (const d of el.querySelectorAll('*')) covered.add(d);
-              covered.add(el);
-              continue;
-            }
-
-            // ── IMG §7.2 ──────────────────────────────────────────────────────
-            if (el.tagName === 'IMG') {
-              let b64 = null;
-              try {
-                const cv = iDoc.createElement('canvas');
-                cv.width = el.naturalWidth || rw;
-                cv.height = el.naturalHeight || rh;
-                const ctx = cv.getContext('2d');
-                ctx.drawImage(el, 0, 0, cv.width, cv.height);
-                b64 = cv.toDataURL('image/png').split(',')[1];
-              } catch(e) {}
-              section.children.push({ type:'FRAME', name:'Image', x:rx, y:ry,
-                width:rw, height:rh, isImage:true, base64Data:b64,
-                objectFit: cs.objectFit || 'cover', // §7.2: mapear para scaleMode
-                bgColor:null, parsedGradient:null,
-                radiusTL:parseFloat(cs.borderTopLeftRadius)||0,
-                radiusTR:parseFloat(cs.borderTopRightRadius)||0,
-                radiusBR:parseFloat(cs.borderBottomRightRadius)||0,
-                radiusBL:parseFloat(cs.borderBottomLeftRadius)||0,
-                borderTop:0, borderRight:0, borderBottom:0, borderLeft:0, borderColor:null,
-                opacity:parseFloat(cs.opacity)||1, overflow:'hidden',
-                mixBlendMode: cs.mixBlendMode || 'normal',
-                figmaShadows:[], figmaEffects:[], zIndex:zi, domIndex: domIndex++, children:[] });
-              covered.add(el);
-              continue;
-            }
-
-            // ── TEXTO MISTO — qualquer elemento com APENAS conteúdo inline ───
-            if (isAllInline(el)) {
-              const runs = collectTextRuns(el, iDoc, cs);
-              const fullTxt = runs.map(x => x.text).join('');
-              if (fullTxt.trim()) {
-                const lh = parseFloat(cs.lineHeight);
-                const textColor = parseColor(cs.color);
-
-                // Se o elemento tem propriedades visuais (bg, border, shadow, radius)
-                // cria UM frame de fundo + UM text por cima — ex: botão azul com texto
-                const elBg  = parseColor(cs.backgroundColor);
-                const elGrad = parseGradient(cs.backgroundImage);
-                const elBtw = parseFloat(cs.borderTopWidth)  || 0;
-                const elBrw = parseFloat(cs.borderRightWidth)|| 0;
-                const elBbw = parseFloat(cs.borderBottomWidth)||0;
-                const elBlw = parseFloat(cs.borderLeftWidth) || 0;
-                const elRad = parseFloat(cs.borderTopLeftRadius) || 0;
-                const elShadows = [];
-                if (cs.boxShadow && cs.boxShadow !== 'none') {
-                  try { const s = parseBoxShadow(cs.boxShadow); if (s) elShadows.push(...(Array.isArray(s)?s:[s])); } catch(e){}
-                }
-                const elHasVis = (elBg && elBg.a > 0.01) || elGrad || elShadows.length ||
-                                 elBtw > 0 || elBrw > 0 || elBbw > 0 || elBlw > 0 || elRad > 0;
-                if (elHasVis) {
-                  section.children.push({
-                    type: 'FRAME', name: el.tagName.toLowerCase() + '-bg',
-                    x: rx, y: ry, width: rw, height: rh,
-                    bgColor: (elBg && elBg.a > 0) ? elBg : null,
-                    parsedGradient: elGrad, bgBase64: null, bgObjectFit: 'cover',
-                    radiusTL: elRad,
-                    radiusTR: parseFloat(cs.borderTopRightRadius)    || 0,
-                    radiusBR: parseFloat(cs.borderBottomRightRadius)  || 0,
-                    radiusBL: parseFloat(cs.borderBottomLeftRadius)   || 0,
-                    borderTop: elBtw, borderRight: elBrw, borderBottom: elBbw, borderLeft: elBlw,
-                    borderColor: (elBtw||elBrw||elBbw||elBlw) ? parseColor(cs.borderColor) : null,
-                    opacity: parseFloat(cs.opacity) || 1,
-                    mixBlendMode: cs.mixBlendMode || 'normal',
-                    overflow: cs.overflow, backdropBlur: 0, layerBlur: 0, rotation: 0,
-                    figmaShadows: elShadows, figmaEffects: [], zIndex: zi - 0.01,
-                    domIndex: domIndex++, children: []
-                  });
-                }
-
-                section.children.push({
-                  type: 'TEXT_MIXED', name: el.tagName.toLowerCase(), runs,
-                  x: rx, y: ry, width: rw, height: rh,
-                  textAlign: cs.textAlign || 'left',
-                  lineHeight: isNaN(lh) ? null : lh,
-                  isMultiline: !isNaN(lh) && rh > lh * 1.5,
-                  textTransform: cs.textTransform || 'none',
-                  textDecoration: cs.textDecorationLine || 'none',
-                  textOverflow: cs.textOverflow || 'clip',
-                  color: textColor,
-                  opacity: parseFloat(cs.opacity) || 1,
-                  mixBlendMode: cs.mixBlendMode || 'normal',
-                  zIndex: zi, domIndex: domIndex++
-                });
-                for (const d of el.querySelectorAll('*')) covered.add(d);
-                covered.add(el);
-                continue;
-              }
-            }
-
-            // ── FRAME VISUAL (background, border, shadow, radius) ────────────
-            const bg   = parseColor(cs.backgroundColor);
-            const grad = parseGradient(cs.backgroundImage);
-            const btw  = parseFloat(cs.borderTopWidth)    || 0;
-            const brw  = parseFloat(cs.borderRightWidth)  || 0;
-            const bbw  = parseFloat(cs.borderBottomWidth) || 0;
-            const blw  = parseFloat(cs.borderLeftWidth)   || 0;
-            const bCol = (btw||brw||bbw||blw) ? parseColor(cs.borderColor) : null;
-            const shadows = [];
-            if (cs.boxShadow && cs.boxShadow !== 'none') {
-              try { const s = parseBoxShadow(cs.boxShadow); if (s) shadows.push(...(Array.isArray(s)?s:[s])); } catch(e){}
-            }
-
-            // §5.4: backdropFilter → BACKGROUND_BLUR
-            let backdropBlur = 0;
-            const bdf = cs.backdropFilter || cs.webkitBackdropFilter || '';
-            if (bdf && bdf !== 'none') {
-              const bm = bdf.match(/blur\(([\d.]+)px\)/);
-              if (bm) backdropBlur = parseFloat(bm[1]);
-            }
-
-            // §5.2: filter → LAYER_BLUR
-            let layerBlur = 0;
-            if (cs.filter && cs.filter !== 'none') {
-              const fm = cs.filter.match(/blur\(([\d.]+)px\)/);
-              if (fm) layerBlur = parseFloat(fm[1]);
-            }
-
-            // Detecta background-image: url(...) — CSS photo backgrounds
-            const hasBgUrl = cs.backgroundImage && cs.backgroundImage !== 'none' && cs.backgroundImage.includes('url(');
-
-            const hasVis = (bg && bg.a > 0.01) || grad || hasBgUrl || shadows.length ||
-                           btw > 0 || brw > 0 || bbw > 0 || blw > 0 ||
-                           parseFloat(cs.borderTopLeftRadius) > 0 ||
-                           backdropBlur > 0 || layerBlur > 0;
-            if (!hasVis) continue;
-
-            // Tenta capturar background-image url() via canvas (pode falhar por CORS)
-            let bgBase64 = null;
-            let bgObjectFit = cs.backgroundSize === 'cover' ? 'cover' : (cs.backgroundSize === 'contain' ? 'contain' : 'cover');
-            if (hasBgUrl && !grad) {
-              try {
-                const urlMatch = cs.backgroundImage.match(/url\(["']?([^"')]+)["']?\)/);
-                if (urlMatch && urlMatch[1]) {
-                  const imgEl = new Image();
-                  imgEl.crossOrigin = 'anonymous';
-                  await new Promise((res) => {
-                    imgEl.onload = res;
-                    imgEl.onerror = res;
-                    imgEl.src = urlMatch[1];
-                    setTimeout(res, 1500);
-                  });
-                  if (imgEl.naturalWidth > 0) {
-                    const cv2 = iDoc.createElement('canvas');
-                    cv2.width = Math.min(imgEl.naturalWidth, 1200);
-                    cv2.height = Math.min(imgEl.naturalHeight, 1200);
-                    const ctx2 = cv2.getContext('2d');
-                    ctx2.drawImage(imgEl, 0, 0, cv2.width, cv2.height);
-                    bgBase64 = cv2.toDataURL('image/png').split(',')[1];
-                  }
-                }
-              } catch(e) { bgBase64 = null; }
-            }
-
-            section.children.push({
-              type:'FRAME', name: el.tagName.toLowerCase() + (el.id?'#'+el.id:''),
-              x:rx, y:ry, width:rw, height:rh,
-              bgColor: (bg && bg.a > 0) ? bg : null,
-              parsedGradient: grad,
-              // bgBase64: CSS background-image url() capturado via canvas
-              bgBase64: bgBase64 || null,
-              bgObjectFit: bgObjectFit,
-              radiusTL: parseFloat(cs.borderTopLeftRadius)    || 0,
-              radiusTR: parseFloat(cs.borderTopRightRadius)   || 0,
-              radiusBR: parseFloat(cs.borderBottomRightRadius)|| 0,
-              radiusBL: parseFloat(cs.borderBottomLeftRadius) || 0,
-              borderTop: btw, borderRight: brw, borderBottom: bbw, borderLeft: blw,
-              borderColor: bCol,
-              opacity: parseFloat(cs.opacity) || 1,
-              mixBlendMode: cs.mixBlendMode || 'normal', // §5.5
-              overflow: cs.overflow,
-              backdropBlur,  // §5.4
-              layerBlur,     // layer blur
-              rotation,      // §8.3
-              figmaShadows: shadows, figmaEffects:[],
-              zIndex: zi, domIndex: domIndex++, children: []
-            });
-          }
-
-          section.children.sort((a, b) => {
-            if ((a.zIndex||0) !== (b.zIndex||0)) return (a.zIndex||0) - (b.zIndex||0);
-            return (a.domIndex||0) - (b.domIndex||0);
-          });
-          return section;
-        }
-
         const roots = [];
-        const modeEl = document.querySelector('input[name="extraction-mode"]:checked');
-        const mode = modeEl ? modeEl.value : 'structured';
 
         for (const child of iDoc.body.children) {
           let json;
-          if (mode === 'structured') {
-            const bodyRect = iDoc.body.getBoundingClientRect();
-            json = await extractDOM(child, iDoc, bodyRect);
+          if (mode === 'flat') {
+            json = await extractFlat(child, iDoc, bodyRect);
           } else {
-            json = await extractFlat(child);
+            json = await extractDOM(child, iDoc, bodyRect);
           }
           if (json) roots.push(json);
         }
@@ -2188,42 +1549,29 @@
         iframe.style.display = 'none';
         iframe.srcdoc = '';
 
-        if (roots.length === 0) {
-          throw new Error('Nenhum elemento extraído. Verifique o HTML.');
-        }
+        if (!roots.length) throw new Error('Nenhum elemento extraído. Verifique o HTML.');
 
-        setStatus('progress', 'Processando no Figma...');
+        setStatus('progress', '🎨 Processando no Figma...');
         document.getElementById('loading-text').innerText = 'Gerando nós no Figma...';
 
-        // Tag root nodes with name
-        roots.forEach((r, i) => {
-          r.name = frameName + (roots.length > 1 ? ` ${i + 1}` : '');
-        });
+        roots.forEach((r, i) => { r.name = frameName + (roots.length>1 ? ` ${i+1}` : ''); });
 
-        // Usa a largura do primeiro artboard filho (não o body que pode estar em flex-center)
-        const fc = iDoc.body.children[0];
-        const finalWidth = fc ? Math.round(fc.getBoundingClientRect().width) || iDoc.body.scrollWidth : iDoc.body.scrollWidth;
-        const finalHeight = iDoc.body.scrollHeight || iDoc.body.offsetHeight;
-
+        // Mapa de fontes personalizado
         const fontMapping = {};
-        const keys = safeStorage.getAllKeys();
-        for (const key of keys) {
+        safeStorage.getAllKeys().forEach(key => {
           if (key && key.startsWith('font-map-')) {
-            const origFont = key.substring('font-map-'.length);
-            const targetFont = safeStorage.getItem(key);
-            if (origFont && targetFont) {
-              fontMapping[origFont] = targetFont;
-            }
-          }
-        }
-        document.querySelectorAll('.font-override-input').forEach(input => {
-          const orig = input.dataset.orig;
-          const val = input.value.trim();
-          if (orig && val) {
-            fontMapping[orig] = val;
-            safeStorage.setItem('font-map-' + orig, val);
+            const orig = key.substring('font-map-'.length);
+            const target = safeStorage.getItem(key);
+            if (orig && target) fontMapping[orig] = target;
           }
         });
+        document.querySelectorAll('.font-override-input').forEach(input => {
+          const orig = input.dataset.orig, val = input.value.trim();
+          if (orig && val) { fontMapping[orig] = val; safeStorage.setItem('font-map-'+orig, val); }
+        });
+
+        const finalWidth  = fc ? Math.round(fc.getBoundingClientRect().width)||iDoc.body.scrollWidth : iDoc.body.scrollWidth;
+        const finalHeight = iDoc.body.scrollHeight || iDoc.body.offsetHeight;
 
         parent.postMessage({
           pluginMessage: {
@@ -2232,33 +1580,31 @@
             width: finalWidth,
             height: finalHeight,
             name: frameName,
-            fontMapping: fontMapping
+            fontMapping,
+            disableAutoLayout: mode === 'structured-absolute',
           }
         }, '*');
 
-      } catch (e) {
+      } catch(e) {
         console.error(e);
         setStatus('error', '⚠ ' + (e.message || 'Erro desconhecido'));
         btn.disabled = false;
-        document.getElementById('sandbox').style.display = 'none';
         document.getElementById('loading-overlay').style.display = 'none';
       }
     });
 
-    // ═══════════════════════════════════════════════════════════════════════════════
+    // ═══════════════════════════════════════════════════════════════════════════
     // MESSAGES FROM PLUGIN BACKEND
-    // ═══════════════════════════════════════════════════════════════════════════════
-    window.addEventListener('message', (event) => {
+    // ═══════════════════════════════════════════════════════════════════════════
+    window.addEventListener('message', event => {
       const msg = event.data.pluginMessage;
       if (!msg) return;
       const btn = document.getElementById('btn-convert');
       const overlay = document.getElementById('loading-overlay');
-      const lText = document.getElementById('loading-text');
-      
       if (msg.type === 'progress') {
         setStatus('progress', msg.text);
         overlay.style.display = 'flex';
-        lText.innerText = msg.text;
+        document.getElementById('loading-text').innerText = msg.text;
       } else if (msg.type === 'success') {
         setStatus('success', msg.message);
         btn.disabled = false;
@@ -2271,5 +1617,4 @@
     });
   </script>
 </body>
-
 </html>
